@@ -20,7 +20,9 @@ function RoutesApp() {
           <Routes>
             <Route path="/" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/agendar" element={<Agendar/>} />
             <Route path="/home" element={<Home/>}/>
+            
           </Routes>
           <NavBar/>
         </BrowserRouter>
