@@ -1,7 +1,10 @@
+
 import RoutesApp from "./lib/routes/routesApp.tsx"
 
+
+
 function App() {
-  return <RoutesApp />;
+  return <RoutesApp/>
 }
 
 export default App
