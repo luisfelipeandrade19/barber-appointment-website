@@ -1,8 +1,10 @@
 import person from "../../assets/ft.jpg"
+import GoogleLoginButton from "../../lib/components/googleLoginButton";
+import FacebookLoginButton from "../../lib/components/FacebookLoginButton";
 
 function LoginPage(){
 
-  console.log("TESTANDO")
+  
     return(
     <>
       <div className="container">
@@ -17,13 +19,17 @@ function LoginPage(){
             </div>
             <div className="socialLogin">
               <h2 id="titleSocialLogin">Logar com</h2>
-              <div>GOOGLE</div>
-              <div>INSTA</div>
+              <GoogleLoginButton/>
+              <FacebookLoginButton />
               <div>FACEBOOK</div>
             </div>
             <footer>
               <p>Não tem conta ainda?</p>
-              <p>Cadastre-se</p>
+              <p onClick={() =>{
+                window.location.href = "/register"}} 
+                style={{ cursor: 'pointer', color: 'blue'}}
+                >Cadastrar-se</p>
+                
             </footer>
         </form>
       </div>
