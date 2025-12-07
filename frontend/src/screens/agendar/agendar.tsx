@@ -1,3 +1,5 @@
+import "./agendar.css";
+
 function Agendar(){
 
     return(

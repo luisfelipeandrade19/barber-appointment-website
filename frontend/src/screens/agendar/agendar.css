@@ -1,0 +1,85 @@
+/* Reset básico para garantir que o layout ocupe a tela toda */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #f5f5f5; /* Cor de fundo da página fora do app */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+}
+
+/* Container principal simulando a tela do celular */
+.container {
+    width: 100%;
+    max-width: 400px; /* Largura mobile */
+    height: 100vh;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Cabeçalho Roxo Profundo */
+header {
+    background-color: #0f0428;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 20px;
+    font-weight: bold;
+    /* Adiciona o ícone de seta simulado via CSS antes do texto se desejar */
+}
+
+/* Espaçamento do Formulário */
+.form-group {
+    padding: 15px 25px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Labels na cor Vinho */
+label {
+    color: #6b2a40;
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+/* Estilo dos Inputs e Selects (Rosa Acinzentado) */
+.input-field {
+    width: 100%;
+    height: 45px;
+    background-color: #e8dadf; /* Cor rosa da imagem */
+    border: 1px solid #d1bdc4;
+    border-radius: 8px;
+    padding: 0 15px;
+    font-size: 16px;
+    color: #333;
+    outline: none;
+    cursor: pointer;
+    appearance: none; /* Remove seta padrão do sistema */
+    
+    /* Adiciona uma seta customizada para os selects */
+    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="%236b2a40" d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+}
+
+/* Estilo específico para o campo de data (ajuste do ícone nativo) */
+input[type="date"].input-field::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    filter: invert(24%) sepia(31%) saturate(2227%) hue-rotate(318deg) brightness(91%) contrast(92%);
+}
+
+/* Efeito de foco para melhorar a UX */
+.input-field:focus {
+    border: 2px solid #6b2a40;
+    background-color: #dfced3;
+}
