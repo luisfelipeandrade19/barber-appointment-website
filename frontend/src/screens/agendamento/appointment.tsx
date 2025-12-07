@@ -11,7 +11,7 @@ function Appointment(){
             date: "12/12/2025",
             time: "14:30h",
             services: "Barba e cabelo",
-            image: exemplo // Pode ser uma URL ou a importação
+            image: exemplo 
         },
         {
             id: 2,
@@ -62,7 +62,6 @@ function Appointment(){
                                     <span>Horário:</span> {item.time}
                                 </p>
                                 <p className="services">
-                                    <span>Serviços:</span> {item.services}
                                 </p>
                             </div>
                         </li>

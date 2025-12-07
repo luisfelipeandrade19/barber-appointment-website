@@ -8,6 +8,7 @@ import Agendar from "../../screens/agendar/agendar";
 
  import { GoogleOAuthProvider } from '@react-oauth/google';
 import Appointment from "../../screens/agendamento/appointment";
+import HistoryPage from "../../screens/historico/historyPage";
 
 
 function RoutesApp() {
@@ -23,6 +24,7 @@ function RoutesApp() {
             <Route path="/agendar" element={<Agendar/>} />
             <Route path="/home" element={<Home/>}/>
             <Route path="/agendamentos" element={<Appointment/>}/>
+            <Route path="/historico" element={<HistoryPage/>}/>
           </Routes>
           <NavBar/>
         </BrowserRouter>

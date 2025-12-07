@@ -27,8 +27,8 @@ function LoginPage(){
               <p onClick={() =>{
                 window.location.href = "/register"}} 
                 style={{ cursor: 'pointer', color: 'blue'}}
-                >Cadastrar-se</p>
-                
+                >Cadastrar-se
+              </p>
             </footer>
         </form>
       </div>
