@@ -22,7 +22,7 @@ function RoutesApp() {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/agendar" element={<Agendar/>} />
             <Route path="/home" element={<Home/>}/>
-            
+            <Route path="/agendamentos" element={<Appointment/>}/>
           </Routes>
           <NavBar/>
         </BrowserRouter>
