@@ -3,6 +3,36 @@ import exemplo from "../../assets/ft.jpg"
 
 function Appointment(){
 
+    const listAppointments = [
+        {
+            id: 1,
+            barberName: "Felipe",
+            contact: "(88) 99999-1111",
+            date: "12/12/2025",
+            time: "14:30h",
+            services: "Barba e cabelo",
+            image: exemplo // Pode ser uma URL ou a importação
+        },
+        {
+            id: 2,
+            barberName: "João",
+            contact: "(88) 99999-2222",
+            date: "13/12/2025",
+            time: "09:00h",
+            services: "Corte Social",
+            image: exemplo
+        },
+        {
+            id: 3,
+            barberName: "Carlos",
+            contact: "(88) 99999-3333",
+            date: "13/12/2025",
+            time: "10:00h",
+            services: "Barba",
+            image: exemplo
+        }
+
+    ]
     
     return(
         <>
@@ -15,26 +45,28 @@ function Appointment(){
                 <div className="appoiments">
                     <h1>Meus Agendamentos:</h1>
                     <ol id="appoiments-list">
+                       {listAppointments.map((item)=>(
                         <li>
-                            <div className="barber01">
-                                <img src={exemplo} alt="logo site" width={150}/>
+                            <div className={item.barberName}>
+                                <img src={item.image} alt="logo site" width={150}/>
                                 <p className="name">
-                                    <span>Barbeiro:</span> Felipe
+                                    <span>Barbeiro:</span> {item.barberName}
                                 </p>
                                 <p className="contact">
-                                    <span>Barbeiro:</span> (88) 00000-0000
+                                    <span>Barbeiro:</span> {item.contact}
                                 </p>
                                 <p className="date">
-                                    <span>Data:</span> xx/xx/xxxx
+                                    <span>Data:</span> {item.date}
                                 </p>
                                 <p className="time">
-                                    <span>Horário:</span> 00:00h
+                                    <span>Horário:</span> {item.time}
                                 </p>
                                 <p className="services">
-                                    <span>Serviços:</span> Barba e cabelo
+                                    <span>Serviços:</span> {item.services}
                                 </p>
                             </div>
                         </li>
+                       ))}
                     </ol>
                 </div>
             </div>
