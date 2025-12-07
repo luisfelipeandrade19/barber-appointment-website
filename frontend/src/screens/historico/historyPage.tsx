@@ -1,9 +1,19 @@
 import voltar from "../../assets/volte.png"
 import exemplo from "../../assets/ft.jpg"
 
+interface BarberHistoryItem {
+    id: number;
+    barberName: string;
+    contact: string;
+    email: string;
+    date: string;
+    services: string;
+    image: string; // ou StaticImageData se usar Next.js
+}
+
 function HistoryPage(){
 
-    const listHistory = [
+    const listHistory: BarberHistoryItem[] = [
         {
             id: 1,
             barberName: "Felipe",
@@ -31,7 +41,6 @@ function HistoryPage(){
             services: "Barba e cabelo",
             image: exemplo 
         }
-
     ]
 
     return(
@@ -47,28 +56,34 @@ function HistoryPage(){
             </header>
             <div className="content-histoy">
                 <ol id="history-list">
-                    {listHistory.map((item)=> (
-                        <li >
-                            <div className={item.barberName}>
-                                <img src={item.image} alt="Foto do barbeiro" width={150}/>
-                                <p className="name">
-                                    <span>Nome:</span> {item.barberName}
-                                </p>
-                                <p className="contact">
-                                    <span>Contato:</span> {item.contact}
-                                </p>
-                                <p className="email">
-                                    <span>Email:</span> {item.email}
-                                </p>
-                                <p className="date">
-                                    <span>Data:</span> {item.date}
-                                </p>
-                                <p className="services">
-                                    <span>Serviços:</span> {item.services}
-                                </p>
-                            </div>
+                    {listHistory.length === 0 ? (
+                        <li className="empty-message">
+                            Você não tem agendamentos antigos
                         </li>
-                    ))}
+                    ) : (
+                            listHistory.map((item, index)=> (
+                                <li key={index}>
+                                    <div className={item.barberName}>
+                                        <img src={item.image} alt="Foto do barbeiro" width={150}/>
+                                        <p className="name">
+                                            <span>Nome:</span> {item.barberName}
+                                        </p>
+                                        <p className="contact">
+                                            <span>Contato:</span> {item.contact}
+                                        </p>
+                                        <p className="email">
+                                            <span>Email:</span> {item.email}
+                                        </p>
+                                        <p className="date">
+                                            <span>Data:</span> {item.date}
+                                        </p>
+                                        <p className="services">
+                                            <span>Serviços:</span> {item.services}
+                                        </p>
+                                    </div>
+                                </li>
+                            ))
+                        )}
                 </ol>
             </div>
         </div>

@@ -1,4 +1,5 @@
 import FacebookLogin from '@greatsumini/react-facebook-login';
+import facebook from "../../assets/facebook.png"
 
 const FacebookLoginButton = () => {
   const appId = import.meta.env.VITE_FACEBOOK_APP_ID;
@@ -16,16 +17,19 @@ const FacebookLoginButton = () => {
         console.log('Get Profile Success!', response);
       }}
       style={{
-        backgroundColor: '#4267b2',
-        color: '#fff',
-        fontSize: '16px',
-        padding: '12px 24px',
-        border: 'none',
-        borderRadius: '4px',
-        cursor: 'pointer'
+        backgroundColor: '#ffffffff',
+        width: 50,
+        height: 50,
+        borderRadius: 100,
+        borderStyle: 'none'
       }}
     >
-      Login via Facebook
+      <img src={facebook} id='imgFacebook' style={{
+        width: 50,
+        height: 50,
+        cursor: 'pointer',
+        padding: 5
+        }}/>
     </FacebookLogin>
   );
 
