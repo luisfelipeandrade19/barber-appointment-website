@@ -1,16 +1,13 @@
 from datetime import datetime, date, time
 from decimal import Decimal
-from sqlalchemy import func, create_engine, Enum, Text, Date, Time, DECIMAL
-from sqlalchemy.orm import relationship, registry, Mapped, mapped_column
-from sqlalchemy.ext.declarative import declarative_base, sessionmaker
-from sqlalchemy.sql import expression
+from sqlalchemy import func, create_engine, Enum, Text, Date, Time, DECIMAL, Column, Integer, String, Boolean, ForeignKey, DateTime
+from sqlalchemy.orm import relationship, sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
 from enum import Enum as PyEnum
 
 Base = declarative_base()
-engine = create_engine('postgresql://user:password@localhost/mydatabase')
+engine = create_engine('postgresql://postgres:1605@localhost:5432/barbersystem')
 _Session = sessionmaker(bind=engine)
-
-table_registry = registry()
 
 # Enums
 class TipoUsuario(PyEnum):
@@ -53,186 +50,194 @@ class TipoRegistroFinanceiro(PyEnum):
     COMISSAO = 'comissao'
 
 # Entidades
-@table_registry.mapped_as_dataclass
-class Usuario:
+class Usuario(Base):
     __tablename__ = "usuario"
     
-    id_usuario: Mapped[int] = mapped_column(init=False, primary_key=True)
-    tipo: Mapped[TipoUsuario] = mapped_column(Enum(TipoUsuario), nullable=False)
-    nome: Mapped[str] = mapped_column(nullable=False)
-    email: Mapped[str] = mapped_column(unique=True, nullable=False)
-    telefone: Mapped[str] = mapped_column(nullable=True)
-    senha_hash: Mapped[str] = mapped_column(nullable=False)
-    data_cadastro: Mapped[datetime] = mapped_column(init=False, server_default=func.now())
-    ativo: Mapped[bool] = mapped_column(default=True)
+    id_usuario = Column(Integer, primary_key=True)
+    tipo = Column(Enum(TipoUsuario), nullable=False)
+    nome = Column(String(100), nullable=False)
+    email = Column(String(100), unique=True, nullable=False)
+    telefone = Column(String(20), nullable=True)
+    senha_hash = Column(String(255), nullable=False)
+    data_cadastro = Column(DateTime, server_default=func.now())
+    ativo = Column(Boolean, default=True)
     
     # Relacionamentos
-    cliente: Mapped["Cliente"] = relationship(back_populates="usuario", cascade="all, delete-orphan", uselist=False)
-    barbeiro: Mapped["Barbeiro"] = relationship(back_populates="usuario", cascade="all, delete-orphan", uselist=False)
+    cliente = relationship("Cliente", back_populates="usuario", cascade="all, delete-orphan", uselist=False)
+    barbeiro = relationship("Barbeiro", back_populates="usuario", cascade="all, delete-orphan", uselist=False)
 
-@table_registry.mapped_as_dataclass
-class Cliente:
+class Cliente(Base):
     __tablename__ = "cliente"
     
-    id_cliente: Mapped[int] = mapped_column(primary_key=True, foreign_key="usuario.id_usuario")
-    preferencias: Mapped[str] = mapped_column(Text, nullable=True)
-    data_ultima_visita: Mapped[datetime] = mapped_column(nullable=True)
+    id_cliente = Column(Integer, ForeignKey('usuario.id_usuario'), primary_key=True)
+    preferencias = Column(Text, nullable=True)
+    data_ultima_visita = Column(DateTime, nullable=True)
     
     # Relacionamentos
-    usuario: Mapped[Usuario] = relationship(back_populates="cliente")
-    agendamentos: Mapped[list["Agendamento"]] = relationship(back_populates="cliente")
-    historicos: Mapped[list["HistoricoServico"]] = relationship(back_populates="cliente")
+    usuario = relationship("Usuario", back_populates="cliente")
+    agendamentos = relationship("Agendamento", back_populates="cliente")
+    historicos = relationship("HistoricoServico", back_populates="cliente")
 
-@table_registry.mapped_as_dataclass
-class Barbeiro:
+class Barbeiro(Base):
     __tablename__ = "barbeiro"
     
-    id_barbeiro: Mapped[int] = mapped_column(primary_key=True, foreign_key="usuario.id_usuario")
-    especialidade: Mapped[str] = mapped_column(nullable=True)
-    ativo: Mapped[bool] = mapped_column(default=True)
-    comissao: Mapped[Decimal] = mapped_column(DECIMAL(5, 2), default=Decimal('0.00'))
+    id_barbeiro = Column(Integer, ForeignKey('usuario.id_usuario'), primary_key=True)
+    especialidade = Column(String(100), nullable=True)
+    ativo = Column(Boolean, default=True)
+    comissao = Column(DECIMAL(5, 2), default=Decimal('0.00'))
     
     # Relacionamentos
-    usuario: Mapped[Usuario] = relationship(back_populates="barbeiro")
-    servicos_criados: Mapped[list["Servico"]] = relationship(back_populates="barbeiro_criador")
-    agendamentos: Mapped[list["Agendamento"]] = relationship(back_populates="barbeiro")
-    disponibilidades: Mapped[list["DisponibilidadeBarbeiro"]] = relationship(back_populates="barbeiro")
-    historicos: Mapped[list["HistoricoServico"]] = relationship(back_populates="barbeiro")
-    registros_financeiros: Mapped[list["RegistroFinanceiro"]] = relationship(back_populates="barbeiro")
+    usuario = relationship("Usuario", back_populates="barbeiro")
+    servicos_criados = relationship("Servico", back_populates="barbeiro_criador")
+    agendamentos = relationship("Agendamento", back_populates="barbeiro")
+    disponibilidades = relationship("DisponibilidadeBarbeiro", back_populates="barbeiro")
+    historicos = relationship("HistoricoServico", back_populates="barbeiro")
+    registros_financeiros = relationship("RegistroFinanceiro", back_populates="barbeiro")
 
-@table_registry.mapped_as_dataclass
-class Servico:
+class Servico(Base):
     __tablename__ = "servico"
     
-    id_servico: Mapped[int] = mapped_column(init=False, primary_key=True)
-    nome: Mapped[str] = mapped_column(nullable=False)
-    descricao: Mapped[str] = mapped_column(Text, nullable=True)
-    duracao_estimada: Mapped[int] = mapped_column(nullable=False)  # em minutos
-    preco: Mapped[Decimal] = mapped_column(DECIMAL(10, 2), nullable=False)
-    ativo: Mapped[bool] = mapped_column(default=True)
-    id_barbeiro_criador: Mapped[int] = mapped_column(foreign_key="barbeiro.id_barbeiro", nullable=True)
-    data_criacao: Mapped[datetime] = mapped_column(init=False, server_default=func.now())
+    id_servico = Column(Integer, primary_key=True)
+    nome = Column(String(100), nullable=False)
+    descricao = Column(Text, nullable=True)
+    duracao_estimada = Column(Integer, nullable=False)  # em minutos
+    preco = Column(DECIMAL(10, 2), nullable=False)
+    ativo = Column(Boolean, default=True)
+    id_barbeiro_criador = Column(Integer, ForeignKey('barbeiro.id_barbeiro'), nullable=True)
+    data_criacao = Column(DateTime, server_default=func.now())
     
     # Relacionamentos
-    barbeiro_criador: Mapped[Barbeiro] = relationship(back_populates="servicos_criados")
-    agendamento_servicos: Mapped[list["AgendamentoServico"]] = relationship(back_populates="servico")
+    barbeiro_criador = relationship("Barbeiro", back_populates="servicos_criados")
+    agendamento_servicos = relationship("AgendamentoServico", back_populates="servico")
 
-@table_registry.mapped_as_dataclass
-class Agendamento:
+class Agendamento(Base):
     __tablename__ = "agendamento"
     
-    id_agendamento: Mapped[int] = mapped_column(init=False, primary_key=True)
-    id_cliente: Mapped[int] = mapped_column(foreign_key="cliente.id_cliente", nullable=False)
-    id_barbeiro: Mapped[int] = mapped_column(foreign_key="barbeiro.id_barbeiro", nullable=False)
-    data_hora_inicio: Mapped[datetime] = mapped_column(nullable=False)
-    data_hora_fim: Mapped[datetime] = mapped_column(nullable=False)
-    status: Mapped[StatusAgendamento] = mapped_column(Enum(StatusAgendamento), default=StatusAgendamento.PENDENTE)
-    tempo_total_estimado: Mapped[int] = mapped_column(nullable=False)  # em minutos
-    valor_total: Mapped[Decimal] = mapped_column(DECIMAL(10, 2), nullable=False)
-    observacoes: Mapped[str] = mapped_column(Text, nullable=True)
-    data_criacao: Mapped[datetime] = mapped_column(init=False, server_default=func.now())
-    data_ultima_atualizacao: Mapped[datetime] = mapped_column(
-        init=False, 
-        server_default=func.now(),
-        onupdate=func.now()
-    )
+    id_agendamento = Column(Integer, primary_key=True)
+    id_cliente = Column(Integer, ForeignKey('cliente.id_cliente'), nullable=False)
+    id_barbeiro = Column(Integer, ForeignKey('barbeiro.id_barbeiro'), nullable=False)
+    data_hora_inicio = Column(DateTime, nullable=False)
+    data_hora_fim = Column(DateTime, nullable=False)
+    status = Column(Enum(StatusAgendamento), default=StatusAgendamento.PENDENTE)
+    tempo_total_estimado = Column(Integer, nullable=False)  # em minutos
+    valor_total = Column(DECIMAL(10, 2), nullable=False)
+    observacoes = Column(Text, nullable=True)
+    data_criacao = Column(DateTime, server_default=func.now())
+    data_ultima_atualizacao = Column(DateTime, server_default=func.now(), onupdate=func.now())
     
     # Relacionamentos
-    cliente: Mapped[Cliente] = relationship(back_populates="agendamentos")
-    barbeiro: Mapped[Barbeiro] = relationship(back_populates="agendamentos")
-    agendamento_servicos: Mapped[list["AgendamentoServico"]] = relationship(
-        back_populates="agendamento", 
-        cascade="all, delete-orphan"
-    )
-    notificacoes: Mapped[list["Notificacao"]] = relationship(back_populates="agendamento")
-    historicos: Mapped[list["HistoricoServico"]] = relationship(back_populates="agendamento")
-    registros_financeiros: Mapped[list["RegistroFinanceiro"]] = relationship(back_populates="agendamento")
+    cliente = relationship("Cliente", back_populates="agendamentos")
+    barbeiro = relationship("Barbeiro", back_populates="agendamentos")
+    agendamento_servicos = relationship("AgendamentoServico", back_populates="agendamento", cascade="all, delete-orphan")
+    notificacoes = relationship("Notificacao", back_populates="agendamento")
+    historicos = relationship("HistoricoServico", back_populates="agendamento")
+    registros_financeiros = relationship("RegistroFinanceiro", back_populates="agendamento")
 
-@table_registry.mapped_as_dataclass
-class AgendamentoServico:
+class AgendamentoServico(Base):
     __tablename__ = "agendamento_servico"
     
-    id_agendamento_servico: Mapped[int] = mapped_column(init=False, primary_key=True)
-    id_agendamento: Mapped[int] = mapped_column(foreign_key="agendamento.id_agendamento", nullable=False)
-    id_servico: Mapped[int] = mapped_column(foreign_key="servico.id_servico", nullable=False)
-    preco_na_epoca: Mapped[Decimal] = mapped_column(DECIMAL(10, 2), nullable=False)
-    observacoes: Mapped[str] = mapped_column(Text, nullable=True)
+    id_agendamento_servico = Column(Integer, primary_key=True)
+    id_agendamento = Column(Integer, ForeignKey('agendamento.id_agendamento'), nullable=False)
+    id_servico = Column(Integer, ForeignKey('servico.id_servico'), nullable=False)
+    preco_na_epoca = Column(DECIMAL(10, 2), nullable=False)
+    observacoes = Column(Text, nullable=True)
     
     # Relacionamentos
-    agendamento: Mapped[Agendamento] = relationship(back_populates="agendamento_servicos")
-    servico: Mapped[Servico] = relationship(back_populates="agendamento_servicos")
+    agendamento = relationship("Agendamento", back_populates="agendamento_servicos")
+    servico = relationship("Servico", back_populates="agendamento_servicos")
 
-@table_registry.mapped_as_dataclass
-class DisponibilidadeBarbeiro:
+class DisponibilidadeBarbeiro(Base):
     __tablename__ = "disponibilidade_barbeiro"
     
-    id_disponibilidade: Mapped[int] = mapped_column(init=False, primary_key=True)
-    id_barbeiro: Mapped[int] = mapped_column(foreign_key="barbeiro.id_barbeiro", nullable=False)
-    data: Mapped[date] = mapped_column(Date, nullable=False)
-    hora_inicio: Mapped[time] = mapped_column(Time, nullable=False)
-    hora_fim: Mapped[time] = mapped_column(Time, nullable=False)
-    tipo: Mapped[TipoDisponibilidade] = mapped_column(Enum(TipoDisponibilidade), default=TipoDisponibilidade.DISPONIVEL)
-    recorrente: Mapped[bool] = mapped_column(default=False)
+    id_disponibilidade = Column(Integer, primary_key=True)
+    id_barbeiro = Column(Integer, ForeignKey('barbeiro.id_barbeiro'), nullable=False)
+    data = Column(Date, nullable=False)
+    hora_inicio = Column(Time, nullable=False)
+    hora_fim = Column(Time, nullable=False)
+    tipo = Column(Enum(TipoDisponibilidade), default=TipoDisponibilidade.DISPONIVEL)
+    recorrente = Column(Boolean, default=False)
     
     # Relacionamentos
-    barbeiro: Mapped[Barbeiro] = relationship(back_populates="disponibilidades")
+    barbeiro = relationship("Barbeiro", back_populates="disponibilidades")
 
-@table_registry.mapped_as_dataclass
-class Notificacao:
+class Notificacao(Base):
     __tablename__ = "notificacao"
     
-    id_notificacao: Mapped[int] = mapped_column(init=False, primary_key=True)
-    id_agendamento: Mapped[int] = mapped_column(foreign_key="agendamento.id_agendamento", nullable=False)
-    tipo: Mapped[TipoNotificacao] = mapped_column(Enum(TipoNotificacao), nullable=False)
-    canal: Mapped[CanalNotificacao] = mapped_column(Enum(CanalNotificacao), nullable=False)
-    destinatario: Mapped[str] = mapped_column(nullable=False)
-    mensagem: Mapped[str] = mapped_column(Text, nullable=False)
-    data_envio: Mapped[datetime] = mapped_column(nullable=False)
-    status_envio: Mapped[StatusEnvio] = mapped_column(Enum(StatusEnvio), default=StatusEnvio.PENDENTE)
-    tentativas: Mapped[int] = mapped_column(default=0)
+    id_notificacao = Column(Integer, primary_key=True)
+    id_agendamento = Column(Integer, ForeignKey('agendamento.id_agendamento'), nullable=False)
+    tipo = Column(Enum(TipoNotificacao), nullable=False)
+    canal = Column(Enum(CanalNotificacao), nullable=False)
+    destinatario = Column(String(255), nullable=False)
+    mensagem = Column(Text, nullable=False)
+    data_envio = Column(DateTime, nullable=False)
+    status_envio = Column(Enum(StatusEnvio), default=StatusEnvio.PENDENTE)
+    tentativas = Column(Integer, default=0)
     
     # Relacionamentos
-    agendamento: Mapped[Agendamento] = relationship(back_populates="notificacoes")
+    agendamento = relationship("Agendamento", back_populates="notificacoes")
 
-@table_registry.mapped_as_dataclass
-class HistoricoServico:
+class HistoricoServico(Base):
     __tablename__ = "historico_servico"
     
-    id_historico: Mapped[int] = mapped_column(init=False, primary_key=True)
-    id_agendamento: Mapped[int] = mapped_column(foreign_key="agendamento.id_agendamento", nullable=False)
-    id_cliente: Mapped[int] = mapped_column(foreign_key="cliente.id_cliente", nullable=False)
-    id_barbeiro: Mapped[int] = mapped_column(foreign_key="barbeiro.id_barbeiro", nullable=False)
-    data_servico: Mapped[datetime] = mapped_column(nullable=False)
-    servicos_realizados: Mapped[str] = mapped_column(Text, nullable=False)
-    valor_total: Mapped[Decimal] = mapped_column(DECIMAL(10, 2), nullable=False)
-    observacoes: Mapped[str] = mapped_column(Text, nullable=True)
+    id_historico = Column(Integer, primary_key=True)
+    id_agendamento = Column(Integer, ForeignKey('agendamento.id_agendamento'), nullable=False)
+    id_cliente = Column(Integer, ForeignKey('cliente.id_cliente'), nullable=False)
+    id_barbeiro = Column(Integer, ForeignKey('barbeiro.id_barbeiro'), nullable=False)
+    data_servico = Column(DateTime, nullable=False)
+    servicos_realizados = Column(Text, nullable=False)
+    valor_total = Column(DECIMAL(10, 2), nullable=False)
+    observacoes = Column(Text, nullable=True)
     
     # Relacionamentos
-    agendamento: Mapped[Agendamento] = relationship(back_populates="historicos")
-    cliente: Mapped[Cliente] = relationship(back_populates="historicos")
-    barbeiro: Mapped[Barbeiro] = relationship(back_populates="historicos")
+    agendamento = relationship("Agendamento", back_populates="historicos")
+    cliente = relationship("Cliente", back_populates="historicos")
+    barbeiro = relationship("Barbeiro", back_populates="historicos")
 
-@table_registry.mapped_as_dataclass
-class RegistroFinanceiro:
+class RegistroFinanceiro(Base):
     __tablename__ = "registro_financeiro"
     
-    id_registro: Mapped[int] = mapped_column(init=False, primary_key=True)
-    id_barbeiro: Mapped[int] = mapped_column(foreign_key="barbeiro.id_barbeiro", nullable=False)
-    id_agendamento: Mapped[int] = mapped_column(foreign_key="agendamento.id_agendamento", nullable=True)
-    data: Mapped[date] = mapped_column(Date, nullable=False)
-    valor: Mapped[Decimal] = mapped_column(DECIMAL(10, 2), nullable=False)
-    tipo: Mapped[TipoRegistroFinanceiro] = mapped_column(Enum(TipoRegistroFinanceiro), nullable=False)
-    descricao: Mapped[str] = mapped_column(Text, nullable=True)
+    id_registro = Column(Integer, primary_key=True)
+    id_barbeiro = Column(Integer, ForeignKey('barbeiro.id_barbeiro'), nullable=False)
+    id_agendamento = Column(Integer, ForeignKey('agendamento.id_agendamento'), nullable=True)
+    data = Column(Date, nullable=False)
+    valor = Column(DECIMAL(10, 2), nullable=False)
+    tipo = Column(Enum(TipoRegistroFinanceiro), nullable=False)
+    descricao = Column(Text, nullable=True)
     
     # Relacionamentos
-    barbeiro: Mapped[Barbeiro] = relationship(back_populates="registros_financeiros")
-    agendamento: Mapped[Agendamento] = relationship(back_populates="registros_financeiros")
+    barbeiro = relationship("Barbeiro", back_populates="registros_financeiros")
+    agendamento = relationship("Agendamento", back_populates="registros_financeiros")
 
-# Criar todas as tabelas
+
+#Base.metadata.create_all(engine)
+
 def criar_tabelas():
-    Base.metadata.create_all(engine)
-
-# Exemplo de uso
+    print("Conectando ao banco...")
+    print(f"URL: {engine.url}")
+    
+    try:
+        # Testa a conexão primeiro
+        with engine.connect() as conn:
+            print("Conexão bem-sucedida!")
+        
+        # Cria as tabelas
+        Base.metadata.create_all(engine)
+        print("Tabelas criadas com sucesso!")
+        
+        # Lista tabelas criadas
+        with engine.connect() as conn:
+            from sqlalchemy import text
+            result = conn.execute(text("""
+                SELECT table_name 
+                FROM information_schema.tables 
+                WHERE table_schema = 'public'
+            """))
+            tables = [row[0] for row in result]
+            print(f"Tabelas: {', '.join(tables)}")
+            
+    except Exception as e:
+        print(f"ERRO: {e}")
+        raise
+    
 if __name__ == "__main__":
     criar_tabelas()
-    print("Tabelas criadas com sucesso!")
