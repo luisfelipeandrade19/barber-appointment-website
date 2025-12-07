@@ -1,3 +1,4 @@
+/* agendar.css */
 
 * {
     margin: 0;
@@ -6,29 +7,29 @@
 }
 
 body {
-    background-color: #f5f5f5; 
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f5f5;
+    font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
 }
 
-
 .container {
     width: 100%;
-    max-width: 400px; 
+    max-width: 400px;
     height: 100vh;
     background-color: white;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-
+/* 1. Roxo Profundo do Header (Extraído do print) */
 header {
-    background-color: #0f0428;
+    background-color: #00012F;
     color: white;
-    padding: 20px;
-    text-align: center;
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 header h1 {
@@ -36,45 +37,50 @@ header h1 {
     font-weight: bold;
 }
 
-.form-group {
-    padding: 15px 25px;
-    display: flex;
-    flex-direction: column;
+label {
+    display: block;
+    color: #00012F; 
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 6px;
 }
 
-label {
-    color: #6b2a40;
-    font-size: 17px;
-    font-weight: 600;
-    margin-bottom: 8px;
+.form-group {
+    padding: 12px 25px;
 }
 
 .input-field {
     width: 100%;
-    height: 45px;
-    background-color: #e8dadf; 
-    border: 1px solid #d1bdc4;
+    height: 40px;
+    background-color: #d8d8d8;
+    border: 1px solid #b8b8b8;
     border-radius: 8px;
-    padding: 0 15px;
-    font-size: 16px;
+    padding: 0 12px;
+    font-size: 15px;
     color: #333;
     outline: none;
-    cursor: pointer;
-    appearance: none; 
 
-    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="%236b2a40" d="M7 10l5 5 5-5z"/></svg>');
-    background-repeat: no-repeat;
-    background-position: right 10px center;
 }
 
-/* Estilo específico para o campo de data (ajuste do ícone nativo) */
+
 input[type="date"].input-field::-webkit-calendar-picker-indicator {
-    cursor: pointer;
     filter: invert(24%) sepia(31%) saturate(2227%) hue-rotate(318deg) brightness(91%) contrast(92%);
 }
 
-/* Efeito de foco para melhorar a UX */
-.input-field:focus {
-    border: 2px solid #6b2a40;
-    background-color: #dfced3;
+/* 5. Menu Inferior (NavBar) */
+footer {
+    border-top: 1px solid #eeeeee;
+    margin-top: auto; /* Empurra para o rodapé */
+    padding: 15px 0;
+    display: flex;
+    justify-content: space-around;
+    background-color: #ffffff;
+}
+
+/* Estilização para simular os ícones do print com bordas escuras */
+.icon-nav {
+    width: 30px;
+    height: 30px;
+    border: 2px solid #0f0525;
+    border-radius: 4px;
 }

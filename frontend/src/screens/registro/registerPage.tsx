@@ -1,14 +1,22 @@
 import person from "../../assets/ft.jpg";
 import GoogleLoginButton from "../../lib/components/googleLoginButton";
 import FacebookLoginButton from "../../lib/components/FacebookLoginButton";
+import "./registerPage.css";
 
 function RegisterPage() {
   return (
     <>
-      <div className="container">
-        {/* Adicionado o / no final */}
-        <img id="userImage" src={person} width={180} alt="User" />
 
+           
+       
+      <div className="container">
+
+        <header>
+            <h1>
+                Criar conta
+            </h1>
+        </header>
+        
         <form action="get">
           <h2 className="userTitle">Nome de usuário</h2>
           <input type="text" id="userNamer" placeholder="Digite seu nome" />
@@ -20,18 +28,20 @@ function RegisterPage() {
           <input type="password" id="inputPassword" placeholder="******" />
 
           <h2 className="userTitle">Confirmar Senha</h2>
-          {/* Corrigido: password e fechamento /> */}
           <input type="password" id="confirmPassword" placeholder="******" />
 
-          <button id="registerButton" type="submit">REGISTRAR</button>
+          <button id="registerButton" type="submit">
+            REGISTRAR
+          </button>
 
-          {/* O form agora engloba tudo que pertence a ele */}
+          {/* Seção de Login Social */}
           <div className="socialLogin">
             <h2 id="titleSocialLogin">Cadastrar com</h2>
             <GoogleLoginButton />
             <FacebookLoginButton />
           </div>
 
+          {/* Rodapé com link para login */}
           <footer>
             <p>Já tem uma conta?</p>
             <p 
@@ -41,7 +51,7 @@ function RegisterPage() {
               Fazer Login
             </p>
           </footer>
-        </form> {/* O form fecha por último */}
+        </form>
       </div>
     </>
   );

@@ -4,10 +4,11 @@ function Agendar(){
 
     return(
         <>
-      <div className="container">
         <header>
           <h1>Agendamento de serviço</h1>
         </header>
+      <div className="container">
+
 
         <div className="form-group">
 
