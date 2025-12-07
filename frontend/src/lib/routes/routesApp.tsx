@@ -5,6 +5,7 @@ import RegisterPage from "../../screens/registro/registerPage";
 import Home from "../../screens/home/home";
 import NavBar from "../components/navBar";
  import { GoogleOAuthProvider } from '@react-oauth/google';
+import Appointment from "../../screens/agendamento/appointment";
 
 
 function RoutesApp() {
@@ -18,6 +19,7 @@ function RoutesApp() {
             <Route path="/" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/home" element={<Home/>}/>
+            <Route path="/agendamentos" element={<Appointment/>}/>
           </Routes>
           <NavBar/>
         </BrowserRouter>

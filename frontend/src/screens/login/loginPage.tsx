@@ -20,8 +20,7 @@ function LoginPage(){
             <div className="socialLogin">
               <h2 id="titleSocialLogin">Logar com</h2>
               <GoogleLoginButton/>
-              <FacebookLoginButton />
-              <div>FACEBOOK</div>
+              <FacebookLoginButton/>
             </div>
             <footer>
               <p>Não tem conta ainda?</p>
