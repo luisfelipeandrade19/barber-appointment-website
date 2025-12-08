@@ -1,4 +1,3 @@
-import person from "../../assets/ft.jpg";
 import GoogleLoginButton from "../../lib/components/googleLoginButton";
 import FacebookLoginButton from "../../lib/components/FacebookLoginButton";
 import "./registerPage.css";
@@ -6,12 +5,10 @@ import "./registerPage.css";
 function RegisterPage() {
   return (
     <>
-
-           
        
       <div className="register-container">
 
-        <header className="register-header">
+        <header>
             <h1>
                 Criar conta
             </h1>

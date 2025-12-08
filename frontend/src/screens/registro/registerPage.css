@@ -1,15 +1,18 @@
 /* registerPage.css */
 
 header {
-  width: 100%;
+  background-color: white;
+  color: white;
+  padding: 18px;
   display: flex;
-  justify-content: center; /* Centraliza o texto horizontalmente */
   align-items: center;
-  padding: 20px 0;
-  margin: 0%;
+  gap: 12px;
 }
 
-/* Reset básico e centralização da tela mobile */
+h1{
+    color: #ffffff;
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -19,18 +22,17 @@ header {
   padding: 20px;
   background-color: #ffffff;
   font-family: Arial, sans-serif;
-  max-width: 400px; /* Mantém proporção mobile no desktop */
+  max-width: 400px;
   max-height: 844;
   margin: 0 auto;
 }
 
 #userImage {
-  border-radius: 50%; /* Mantém a imagem redonda como no print */
+  border-radius: 50%; 
   margin-bottom: 20px;
   object-fit: cover;
 }
 
-/* Títulos das seções de input (Vinho/Lilás escuro) */
 .userTitle {
   color: #05001c; 
   font-size: 16px;
