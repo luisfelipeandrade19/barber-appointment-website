@@ -1,54 +1,46 @@
-/* registerPage.css */
-
-header {
+.register-header {
   width: 100%;
   display: flex;
-  justify-content: center; /* Centraliza o texto horizontalmente */
-  align-items: center;
-  padding: 20px 0;
-  margin: 0%;
-}
-
-/* Reset básico e centralização da tela mobile */
-.container {
-  display: flex;
+  justify-content: center; 
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  min-height: 100vh;
-  padding: 20px;
+  margin: 0%;
   background-color: #ffffff;
-  font-family: Arial, sans-serif;
-  max-width: 400px; /* Mantém proporção mobile no desktop */
+  color: #000000;
+}
+
+.title-create-account{
+  font-size: 40px;
+  font-weight: 800;
+}
+
+.ou-registre{
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.register-container {
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  max-width: 400px; 
   max-height: 844;
   margin: 0 auto;
 }
 
-#userImage {
-  border-radius: 50%; /* Mantém a imagem redonda como no print */
-  margin-bottom: 20px;
-  object-fit: cover;
-}
-
-/* Títulos das seções de input (Vinho/Lilás escuro) */
 .userTitle {
-  color: #05001c; 
+  color: #000000; 
   font-size: 16px;
   font-weight: bold;
   align-self: flex-start;
   margin: 15px 0 5px 10px;
 }
 
-form {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
 input {
   width: 100%;
   height: 55px;
-  background-color: #aeb0be; 
+  background-color:  #00012f36; 
   border: none;
   border-radius: 12px;
   padding: 0 15px;
@@ -64,8 +56,8 @@ input::placeholder {
 
 #registerButton {
   width: 80%;
-  height: 60px;
-  background-color: #05001c; 
+  height: 55px;
+  background-color: #03062b; 
   color: #ffffff;
   border: none;
   border-radius: 15px;
@@ -73,25 +65,29 @@ input::placeholder {
   font-weight: bold;
   cursor: pointer;
   margin: 30px auto 20px auto;
-  transition: opacity 0.2s;
+  transition: 0.3s;
 }
 
 #registerButton:hover {
-  opacity: 0.9;
+  opacity: 0.95;
 }
 
-#titleSocialLogin {
+#register-titleSocialLogin {
   font-size: 14px;
   color: #666;
   margin-bottom: 15px;
 }
 
-.socialLogin div {
-  margin-bottom: 10px;
+form {
+  text-align: center;
+}
+
+form h2 {
+  text-align: start;
 }
 
 footer {
-  text-align: center;
+  align-items: center;
   margin-top: 20px;
 }
 

@@ -1,4 +1,3 @@
-import person from "../../assets/ft.jpg";
 import GoogleLoginButton from "../../lib/components/googleLoginButton";
 import FacebookLoginButton from "../../lib/components/FacebookLoginButton";
 import "./registerPage.css";
@@ -6,15 +5,18 @@ import "./registerPage.css";
 function RegisterPage() {
   return (
     <>
-
-           
-       
       <div className="register-container">
 
         <header className="register-header">
-            <h1>
-                Criar conta
-            </h1>
+            <p className="title-create-account">Criar Conta</p>
+            <div className="register-socialLogin">
+            <GoogleLoginButton />
+            <FacebookLoginButton />
+          </div>
+          <div className="ou-registre">
+            <p>ou</p>
+            <p>Registre-se com email</p>
+          </div>
         </header>
         
         <form action="get">
@@ -33,13 +35,6 @@ function RegisterPage() {
           <button id="registerButton" type="submit">
             REGISTRAR
           </button>
-
-          
-          <div className="register-socialLogin">
-            <h2 id="register-titleSocialLogin">Cadastrar com</h2>
-            <GoogleLoginButton />
-            <FacebookLoginButton />
-          </div>
 
           <footer className="register-footer">
             <p>Já tem uma conta?</p>
