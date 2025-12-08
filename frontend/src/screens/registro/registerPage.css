@@ -80,13 +80,6 @@ input::placeholder {
   opacity: 0.9;
 }
 
-.socialLogin {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 10px;
-}
-
 #titleSocialLogin {
   font-size: 14px;
   color: #666;

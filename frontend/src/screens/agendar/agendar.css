@@ -1,19 +1,10 @@
-/* agendar.css */
-
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-body {
-    background-color: #f5f5f5;
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-}
-
-.container {
+.agendar-container {
     width: 100%;
     max-width: 400px;
     height: 100vh;
@@ -22,7 +13,6 @@ body {
     flex-direction: column;
 }
 
-/* 1. Roxo Profundo do Header (Extraído do print) */
 header {
     background-color: #00012F;
     color: white;
@@ -62,22 +52,20 @@ label {
 
 }
 
-
 input[type="date"].input-field::-webkit-calendar-picker-indicator {
     filter: invert(24%) sepia(31%) saturate(2227%) hue-rotate(318deg) brightness(91%) contrast(92%);
 }
 
-/* 5. Menu Inferior (NavBar) */
 footer {
     border-top: 1px solid #eeeeee;
-    margin-top: auto; /* Empurra para o rodapé */
+    margin-top: auto; 
     padding: 15px 0;
     display: flex;
     justify-content: space-around;
     background-color: #ffffff;
 }
 
-/* Estilização para simular os ícones do print com bordas escuras */
+
 .icon-nav {
     width: 30px;
     height: 30px;

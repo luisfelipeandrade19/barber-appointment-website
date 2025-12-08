@@ -9,9 +9,9 @@ function RegisterPage() {
 
            
        
-      <div className="container">
+      <div className="register-container">
 
-        <header>
+        <header className="register-header">
             <h1>
                 Criar conta
             </h1>
@@ -34,18 +34,17 @@ function RegisterPage() {
             REGISTRAR
           </button>
 
-          {/* Seção de Login Social */}
-          <div className="socialLogin">
-            <h2 id="titleSocialLogin">Cadastrar com</h2>
+          
+          <div className="register-socialLogin">
+            <h2 id="register-titleSocialLogin">Cadastrar com</h2>
             <GoogleLoginButton />
             <FacebookLoginButton />
           </div>
 
-          {/* Rodapé com link para login */}
-          <footer>
+          <footer className="register-footer">
             <p>Já tem uma conta?</p>
             <p 
-              onClick={() => { window.location.href = "/login" }} 
+              onClick={() => { window.location.href = "/" }} 
               style={{ cursor: 'pointer', color: 'blue' }}
             >
               Fazer Login

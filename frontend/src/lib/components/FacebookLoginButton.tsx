@@ -28,7 +28,8 @@ const FacebookLoginButton = () => {
         width: 50,
         height: 50,
         cursor: 'pointer',
-        padding: 5
+        padding: 5,
+        display: 'flex'
         }}/>
     </FacebookLogin>
   );

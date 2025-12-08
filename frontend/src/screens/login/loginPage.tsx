@@ -8,7 +8,7 @@ function LoginPage(){
   
     return(
     <>
-      <div className="container">
+      <div className="login-container">
         <img id="userImage" src={person} width={180}/>
         <form action="get">
             <div className="inputs">
@@ -32,7 +32,7 @@ function LoginPage(){
                   >Cadastrar-se
                 </p>
               </footer>
-              </div>
+            </div>
         </form>
       </div>
     </>
