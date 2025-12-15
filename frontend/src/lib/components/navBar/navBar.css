@@ -3,4 +3,14 @@
     bottom: 0;
     left: 0;
     width: 100%;
+    border-top:1px solid rgba(0, 0, 0, 0.397);
+    background-color: white;
+    height: 7vh;
+    text-align: center;
+    padding: 1%;
+}
+
+#imgs-nav{
+    width: 40px;
+    margin: 0px 2% ;
 }
