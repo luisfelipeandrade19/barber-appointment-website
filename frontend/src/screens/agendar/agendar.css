@@ -13,7 +13,7 @@
     flex-direction: column;
 }
 
-header {
+.agendar-header {
     background-color: #00012F;
     color: white;
     padding: 18px;

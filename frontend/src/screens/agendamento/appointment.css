@@ -1,0 +1,65 @@
+.appointment-container{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding-bottom: 70px;
+}
+
+.appointment-header{
+    text-align: start;  
+}
+
+.appointment-page-btn{
+    background-color: red;
+    border: none;
+    width: 318px;
+    height: 44px;
+    border-radius: 14px;
+}
+
+.title-appointments{
+    font-size: 24px;
+    font-weight: 700;
+    padding-bottom: 15px;
+}
+
+.item-list{
+    background-color: rgba(0, 1, 47, 0.35);
+    list-style-type: none;
+    border-radius: 14px;
+    border: 1px solid  rgba(0, 1, 47, 0.4);
+}
+
+.appoiments{
+    padding: 20px 0px;
+}
+
+#appoiments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 0;
+}
+
+.div-list{
+    display: flex;
+    flex-direction: row;
+}
+
+#img-list{
+    border-radius: 24px;
+    padding: 10px;
+}
+
+.appointment-info{
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.appointment-info span{
+    font-weight: 700;
+}
+
