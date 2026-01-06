@@ -142,7 +142,10 @@ def login(data: LoginRequest, db: Session = Depends(get_db)):
 @app.post('/api/agendamentos', status_code=status.HTTP_201_CREATED)
 def criar_agendamento(data: AgendamentoRequest, db: Session = Depends(get_db)):
     try:
-        data_inicio = datetime.fromisoformat(data.data_hora)
+        try:
+            data_inicio = datetime.fromisoformat(data.data_hora)
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Formato de data inválido. Use o formato ISO 8601.")
         
         servicos_db = db.query(Servico).filter(Servico.id_servico.in_(data.servicos)).all()
         
