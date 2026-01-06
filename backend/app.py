@@ -1,184 +1,186 @@
-from flask import Flask, jsonify, request
-from flask_cors import CORS
+from fastapi import FastAPI, HTTPException, Depends, status, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel
+from typing import List
+from sqlalchemy.orm import Session
 from models import _Session, Servico, Barbeiro, Agendamento, Usuario, Cliente, TipoUsuario, AgendamentoServico
 from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
+import uvicorn
 
-app = Flask(__name__)
+app = FastAPI()
 
-# Configura CORS para permitir que o frontend (localhost:5173) acesse este backend
-CORS(app, resources={r"/api/*": {"origins": ["http://localhost:5173", "http://127.0.0.1:5173"]}})
+# Configura CORS
+origins = ["http://localhost:5173", "http://127.0.0.1:5173"]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Handler para garantir que erros retornem {"erro": "mensagem"} mantendo compatibilidade com o frontend
+@app.exception_handler(HTTPException)
+async def custom_http_exception_handler(request: Request, exc: HTTPException):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"erro": exc.detail},
+    )
 
 # Helper para gerenciar a sessão do banco
-def get_db_session():
-    return _Session()
-
-@app.route('/api/servicos', methods=['GET'])
-def listar_servicos():
-    session = get_db_session()
+def get_db():
+    db = _Session()
     try:
-        # Consulta usando o modelo definido em models.py
-        servicos = session.query(Servico).filter_by(ativo=True).all()
+        yield db
+    finally:
+        db.close()
+
+# Pydantic Models
+class RegisterRequest(BaseModel):
+    nome: str
+    email: str
+    senha: str
+    confirmar_senha: str
+
+class LoginRequest(BaseModel):
+    email: str
+    senha: str
+
+class AgendamentoRequest(BaseModel):
+    id_cliente: int
+    id_barbeiro: int
+    servicos: List[int]
+    data_hora: str
+
+@app.get('/api/servicos')
+def listar_servicos(db: Session = Depends(get_db)):
+    try:
+        servicos = db.query(Servico).filter_by(ativo=True).all()
         
-        # Serialização manual para garantir compatibilidade JSON (Decimal -> float)
         resultado = []
         for s in servicos:
             resultado.append({
                 "id": s.id_servico,
                 "nome": s.nome,
                 "descricao": s.descricao,
-                "preco": float(s.preco), # JSON não suporta Decimal nativamente
+                "preco": float(s.preco),
                 "duracao_estimada": s.duracao_estimada,
                 "id_barbeiro": s.id_barbeiro_criador
             })
             
-        return jsonify(resultado)
+        return resultado
     except SQLAlchemyError as e:
-        return jsonify({"erro": str(e)}), 500
-    finally:
-        session.close()
+        raise HTTPException(status_code=500, detail=str(e))
 
-@app.route('/api/barbeiros', methods=['GET'])
-def listar_barbeiros():
-    session = get_db_session()
+@app.get('/api/barbeiros')
+def listar_barbeiros(db: Session = Depends(get_db)):
     try:
-        barbeiros = session.query(Barbeiro).filter_by(ativo=True).all()
+        barbeiros = db.query(Barbeiro).filter_by(ativo=True).all()
         resultado = []
         for b in barbeiros:
-            # Precisamos acessar o objeto Usuario relacionado para pegar o nome
             resultado.append({
                 "id": b.id_barbeiro,
                 "nome": b.usuario.nome if b.usuario else "Desconhecido",
                 "especialidade": b.especialidade
             })
-        return jsonify(resultado)
+        return resultado
     except SQLAlchemyError as e:
-        return jsonify({"erro": str(e)}), 500
-    finally:
-        session.close()
+        raise HTTPException(status_code=500, detail=str(e))
 
-@app.route('/api/register', methods=['POST'])
-def registrar_usuario():
-    session = get_db_session()
-    data = request.get_json()
-
+@app.post('/api/register', status_code=status.HTTP_201_CREATED)
+def registrar_usuario(data: RegisterRequest, db: Session = Depends(get_db)):
     try:
-        # Validação básica
-        if not data or not data.get('email') or not data.get('senha') or not data.get('nome'):
-             return jsonify({"erro": "Dados incompletos"}), 400
+        if data.senha != data.confirmar_senha:
+             raise HTTPException(status_code=400, detail="Senhas não conferem")
 
-        if data.get('senha') != data.get('confirmar_senha'):
-             return jsonify({"erro": "Senhas não conferem"}), 400
+        if db.query(Usuario).filter_by(email=data.email).first():
+            raise HTTPException(status_code=400, detail="Email já cadastrado")
 
-        # Verificar se usuário já existe
-        if session.query(Usuario).filter_by(email=data.get('email')).first():
-            return jsonify({"erro": "Email já cadastrado"}), 400
-
-        # Criar Usuário
         novo_usuario = Usuario(
-            nome=data.get('nome'),
-            email=data.get('email'),
-            senha_hash=generate_password_hash(data.get('senha')),
-            tipo=TipoUsuario.CLIENTE # Por padrão, registra como cliente
+            nome=data.nome,
+            email=data.email,
+            senha_hash=generate_password_hash(data.senha),
+            tipo=TipoUsuario.CLIENTE
         )
-        session.add(novo_usuario)
-        session.flush() # Para gerar o ID do usuário antes de criar o cliente
+        db.add(novo_usuario)
+        db.flush()
 
-        # Criar Cliente vinculado
         novo_cliente = Cliente(id_cliente=novo_usuario.id_usuario)
-        session.add(novo_cliente)
+        db.add(novo_cliente)
 
-        session.commit()
-        return jsonify({"mensagem": "Usuário criado com sucesso"}), 201
+        db.commit()
+        return {"mensagem": "Usuário criado com sucesso"}
 
     except SQLAlchemyError as e:
-        session.rollback()
-        return jsonify({"erro": str(e)}), 500
-    finally:
-        session.close()
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
 
-@app.route('/api/login', methods=['POST'])
-def login():
-    session = get_db_session()
-    data = request.get_json()
-
+@app.post('/api/login')
+def login(data: LoginRequest, db: Session = Depends(get_db)):
     try:
-        email = data.get('email')
-        senha = data.get('senha')
+        usuario = db.query(Usuario).filter_by(email=data.email).first()
 
-        usuario = session.query(Usuario).filter_by(email=email).first()
-
-        if usuario and check_password_hash(usuario.senha_hash, senha):
-            # Em um app real, aqui você geraria um Token JWT.
-            # Para este protótipo, retornamos o ID e o Tipo para o frontend salvar.
-            return jsonify({
+        if usuario and check_password_hash(usuario.senha_hash, data.senha):
+            return {
                 "mensagem": "Login realizado com sucesso",
                 "usuario": {
                     "id": usuario.id_usuario,
                     "nome": usuario.nome,
                     "tipo": usuario.tipo.value
                 }
-            }), 200
+            }
         else:
-            return jsonify({"erro": "Credenciais inválidas"}), 401
+            raise HTTPException(status_code=401, detail="Credenciais inválidas")
     except Exception as e:
-        return jsonify({"erro": str(e)}), 500
-    finally:
-        session.close()
+        if isinstance(e, HTTPException):
+            raise e
+        raise HTTPException(status_code=500, detail=str(e))
 
-@app.route('/api/agendamentos', methods=['POST'])
-def criar_agendamento():
-    session = get_db_session()
-    data = request.get_json()
-
+@app.post('/api/agendamentos', status_code=status.HTTP_201_CREATED)
+def criar_agendamento(data: AgendamentoRequest, db: Session = Depends(get_db)):
     try:
-        # Dados esperados: id_cliente, id_barbeiro, servicos (lista de IDs), data_hora (ISO string)
-        # Exemplo data_hora: "2023-10-25T14:30:00"
+        data_inicio = datetime.fromisoformat(data.data_hora)
         
-        data_inicio = datetime.fromisoformat(data.get('data_hora'))
-        
-        # Calcular duração total e preço total
-        servicos_ids = data.get('servicos', [])
-        servicos_db = session.query(Servico).filter(Servico.id_servico.in_(servicos_ids)).all()
+        servicos_db = db.query(Servico).filter(Servico.id_servico.in_(data.servicos)).all()
         
         duracao_total = sum([s.duracao_estimada for s in servicos_db])
         valor_total = sum([s.preco for s in servicos_db])
         data_fim = data_inicio + timedelta(minutes=duracao_total)
 
         novo_agendamento = Agendamento(
-            id_cliente=data.get('id_cliente'),
-            id_barbeiro=data.get('id_barbeiro'),
+            id_cliente=data.id_cliente,
+            id_barbeiro=data.id_barbeiro,
             data_hora_inicio=data_inicio,
             data_hora_fim=data_fim,
             tempo_total_estimado=duracao_total,
             valor_total=valor_total
         )
-        session.add(novo_agendamento)
-        session.flush() # Garante que o ID do agendamento seja gerado antes de salvar os serviços
+        db.add(novo_agendamento)
+        db.flush()
 
-        # Salva a relação de quais serviços foram escolhidos para este agendamento
         for servico in servicos_db:
             novo_item = AgendamentoServico(
                 id_agendamento=novo_agendamento.id_agendamento,
                 id_servico=servico.id_servico,
-                preco_na_epoca=servico.preco # Importante para histórico financeiro se o preço mudar depois
+                preco_na_epoca=servico.preco
             )
-            session.add(novo_item)
+            db.add(novo_item)
 
-        session.commit() # Confirma tudo (Agendamento + Itens)
+        db.commit()
 
-        return jsonify({"mensagem": "Agendamento realizado com sucesso!"}), 201
+        return {"mensagem": "Agendamento realizado com sucesso!"}
     except Exception as e:
-        session.rollback()
-        return jsonify({"erro": str(e)}), 500
-    finally:
-        session.close()
+        db.rollback()
+        if isinstance(e, HTTPException):
+            raise e
+        raise HTTPException(status_code=500, detail=str(e))
 
-# Exemplo de rota raiz para teste
-@app.route('/')
+@app.get('/')
 def index():
-    return jsonify({"mensagem": "API Barbearia Online"})
+    return {"mensagem": "API Barbearia Online"}
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    uvicorn.run(app, host="127.0.0.1", port=5000)
