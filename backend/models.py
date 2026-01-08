@@ -1,12 +1,16 @@
 from datetime import datetime, date, time
 from decimal import Decimal
+import os
 from sqlalchemy import func, create_engine, Enum, Text, Date, Time, DECIMAL, Column, Integer, String, Boolean, ForeignKey, DateTime
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from enum import Enum as PyEnum
+from dotenv import load_dotenv
+
+load_dotenv() # Carrega variáveis do arquivo .env
 
 Base = declarative_base()
-engine = create_engine('postgresql://postgres:1605@localhost:5432/barbersystem')
+engine = create_engine(os.getenv('DATABASE_URL', 'postgresql://postgres:1605@localhost:5432/barbersystem'))
 _Session = sessionmaker(bind=engine)
 
 # Enums
