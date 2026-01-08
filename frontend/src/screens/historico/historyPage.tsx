@@ -1,5 +1,6 @@
 import voltar from "../../assets/volte.png"
-import exemplo from "../../assets/ft.jpg"
+import exemplo from "../../assets/foto-do-perfil.png"
+
 
 interface BarberHistoryItem {
     id: number;
@@ -21,7 +22,7 @@ function HistoryPage(){
             email: "barber@email.com",
             date: "12/12/2025",
             services: "Barba e cabelo",
-            image: exemplo 
+            image: exemplo
         },
         {
             id: 2,
@@ -30,7 +31,7 @@ function HistoryPage(){
             email: "barber@email.com",
             date: "12/12/2025",
             services: "Barba e cabelo",
-            image: exemplo 
+            image: exemplo
         },
         {
             id: 3,
@@ -39,7 +40,7 @@ function HistoryPage(){
             email: "barber@email.com",
             date: "12/12/2025",
             services: "Barba e cabelo",
-            image: exemplo 
+            image: exemplo
         }
     ]
 

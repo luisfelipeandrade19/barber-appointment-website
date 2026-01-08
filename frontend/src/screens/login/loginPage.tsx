@@ -1,6 +1,7 @@
-import person from "../../assets/ft.jpg"
+
 import GoogleLoginButton from "../../lib/components/googleLoginButton";
 import FacebookLoginButton from "../../lib/components/FacebookLoginButton";
+import profile from "../../assets/foto-do-perfil.png"
 import "./loginPage.css"
 
 function LoginPage(){
@@ -9,7 +10,7 @@ function LoginPage(){
     return(
     <>
       <div className="login-container">
-        <img id="userImage" src={person} width={180}/>
+        <img className="profile-img" src={profile} width={180}/>
         <form action="get">
             <div className="inputs">
               <p className="input-label">Email</p>

@@ -1,6 +1,7 @@
 import logoImg from "../../assets/logoSite.png"
-import exemplo from "../../assets/ft.jpg"
+import exemplo from "../../assets/foto-do-perfil.png"
 import "./appointment.css"
+import { Link } from "react-router-dom"
 
 function Appointment(){
 
@@ -70,7 +71,7 @@ function Appointment(){
                 <img className="img-logo" src={logoImg} alt="logo site" />
             </header>
             <div className="appointment-content-main">
-                <button className="appointment-page-btn">AGENDAR AGORA</button>
+                <Link to="/agendar"><button className="appointment-page-btn"  >AGENDAR AGORA</button></Link>
                 <div className="appoiments">
                     <h1 className="title-appointments">Meus Agendamentos:</h1>
                     <ol id="appoiments-list">
