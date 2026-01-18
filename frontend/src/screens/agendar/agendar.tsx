@@ -46,6 +46,9 @@ function Agendar(){
               <option value="12:00">12:00</option>
             </select>
           </div>
+          <div className="button-app">
+              <button className="appointment-page-btn" id="btn-appoint">AGENDAR AGORA</button>
+          </div>
         </div>
 
       </div>
