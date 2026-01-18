@@ -3,6 +3,7 @@ import GoogleLoginButton from "../../lib/components/googleLoginButton";
 import FacebookLoginButton from "../../lib/components/FacebookLoginButton";
 import profile from "../../assets/foto-do-perfil.png"
 import "./loginPage.css"
+import { Link } from 'react-router-dom';
 
 function LoginPage(){
 
@@ -17,7 +18,11 @@ function LoginPage(){
               <input type="email" id="inputUsername" placeholder="Digite seu email"/>
               <p className="input-label">Senha</p>
               <input type="password" id="inputPassword" placeholder="******" />
-              <button id="loginButton">Login</button>
+              <Link to="/home">
+                <button id="loginButton" style={{ cursor: 'pointer', color: 'white' }}>
+                  Login
+                </button>
+              </Link>
             </div>
             <div className="socials">
               <h2 id="titleSocialLogin">Logar com</h2>
