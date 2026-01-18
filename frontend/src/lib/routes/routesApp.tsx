@@ -4,6 +4,7 @@ import RegisterPage from "../../screens/registro/registerPage";
 import Home from "../../screens/home/home";
 import NavBar from "../components/navBar/navBar";
 import Agendar from "../../screens/agendar/agendar";
+import ProfilePage from "../../screens/profile/profilePage";
 
  import { GoogleOAuthProvider } from '@react-oauth/google';
 import Appointment from "../../screens/agendamento/appointment";
@@ -23,6 +24,7 @@ function Layout() {
         <Route path="/home" element={<Home/>}/>
         <Route path="/agendamentos" element={<Appointment/>}/>
         <Route path="/historico" element={<HistoryPage/>}/>
+        <Route path="/perfil" element={<ProfilePage/>}/>
       </Routes>
       {showNavBar && <NavBar/>}
     </>
