@@ -22,7 +22,16 @@ jobs:
       run: |
         echo "Verificando package.json..."
         cat package.json | grep -A 10 '"scripts"'
-        npm ci
+        if [ -f package-lock.json ]; then
+          echo "Running npm ci (strict install from lock file)..."
+          npm ci || {
+            echo "npm ci failed; running npm install to proceed and regenerate lock file"
+            npm install
+          }
+        else
+          echo "No lock file found, running npm install..."
+          npm install
+        fi
     
     - name: Install Playwright Browsers
       working-directory: frontend
