@@ -1,0 +1,235 @@
+.profile-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #f5f5f5;
+    /* Light gray background */
+    overflow-y: auto;
+    padding-bottom: 70px;
+    /* Space for NavBar */
+}
+
+.profile-header {
+    background-color: #dcdcdc;
+    /* Grayish header background */
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border-bottom: 1px solid #ccc;
+}
+
+.profile-avatar-container {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: #0d0035;
+    /* Dark blue/purple */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.auth-icon {
+    width: 40px;
+    height: 40px;
+    filter: invert(1);
+    /* Make icon white if it's black */
+}
+
+.profile-info h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #000;
+}
+
+.edit-link-btn {
+    font-size: 0.9rem;
+    color: #555;
+    text-decoration: none;
+    margin-top: 5px;
+    display: inline-block;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.edit-link-btn:hover {
+    text-decoration: underline;
+}
+
+.details-box {
+    margin: 20px;
+    background-color: #dcdcdc;
+    border: 2px solid #007bff;
+    /* Blue border */
+    padding: 20px;
+}
+
+.detail-item {
+    margin-bottom: 15px;
+}
+
+.detail-item label {
+    display: block;
+    font-size: 1rem;
+    color: #000;
+    margin-bottom: 2px;
+}
+
+.detail-item span {
+    display: block;
+    font-size: 1rem;
+    color: #333;
+}
+
+.menu-options {
+    flex: 1;
+    background-color: #dcdcdc;
+    margin-top: 20px;
+    padding: 20px;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 0;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #000;
+    border-bottom: 1px solid #ccc;
+    /* Separator */
+}
+
+.menu-item:last-child {
+    border-bottom: none;
+}
+
+.menu-icon {
+    width: 30px;
+    height: 30px;
+}
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.history-modal-content {
+    background-color: white;
+    width: 90%;
+    max-width: 400px;
+    max-height: 80vh;
+    border-radius: 10px;
+    padding: 20px;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.close-modal-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #333;
+}
+
+.history-title {
+    margin-top: 0;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+}
+
+.history-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.history-item {
+    border: 1px solid #eee;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.history-item p {
+    margin: 5px 0;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.history-item span {
+    font-weight: bold;
+    color: #333;
+}
+
+/* Form Styles for Edit Modal */
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    /* Fix padding issues */
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.save-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    flex: 1;
+}
+
+.cancel-btn {
+    background-color: #ccc;
+    color: #333;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    flex: 1;
+}
