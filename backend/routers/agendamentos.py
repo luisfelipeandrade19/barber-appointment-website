@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from models import Agendamento, Servico, AgendamentoServico, Usuario, TipoUsuario
+from models import Agendamento, Servico, AgendamentoServico, Usuario, TipoUsuario, StatusAgendamento, Barbeiro
 from schemas import AgendamentoRequest, UpdateStatusRequest, UpdateBarbeiroRequest
 from dependencies import get_db, get_current_user
 from datetime import datetime, timedelta
@@ -10,12 +10,34 @@ router = APIRouter(tags=["Agendamentos"])
 @router.post('/api/agendamentos', status_code=status.HTTP_201_CREATED)
 def criar_agendamento(data: AgendamentoRequest, db: Session = Depends(get_db)):
     try:
+        # Validações de Integridade
+        cliente = db.query(Usuario).filter(Usuario.id_usuario == data.id_cliente, Usuario.tipo == TipoUsuario.CLIENTE).first()
+        if not cliente:
+            raise HTTPException(status_code=404, detail="Cliente não encontrado.")
+
+        barbeiro = db.query(Barbeiro).filter(Barbeiro.id_barbeiro == data.id_barbeiro).first()
+        if not barbeiro:
+            raise HTTPException(status_code=404, detail="Barbeiro não encontrado.")
+
         data_inicio = datetime.fromisoformat(data.data_hora)
         servicos_db = db.query(Servico).filter(Servico.id_servico.in_(data.servicos)).all()
+        if len(servicos_db) != len(data.servicos):
+            raise HTTPException(status_code=400, detail="Um ou mais serviços solicitados não foram encontrados.")
         
         duracao_total = sum([s.duracao_estimada for s in servicos_db])
         valor_total = sum([s.preco for s in servicos_db])
         data_fim = data_inicio + timedelta(minutes=duracao_total)
+
+        # Verifica se já existe agendamento no horário (exceto cancelados/recusados)
+        conflito = db.query(Agendamento).filter(
+            Agendamento.id_barbeiro == data.id_barbeiro,
+            Agendamento.status.notin_([StatusAgendamento.CANCELADO, StatusAgendamento.RECUSADO]),
+            Agendamento.data_hora_inicio < data_fim,
+            Agendamento.data_hora_fim > data_inicio
+        ).first()
+
+        if conflito:
+            raise HTTPException(status_code=409, detail="Horário indisponível. O barbeiro já possui um agendamento neste intervalo.")
 
         novo_agendamento = Agendamento(
             id_cliente=data.id_cliente,
@@ -63,6 +85,10 @@ def atualizar_barbeiro_agendamento(id_agendamento: int, data: UpdateBarbeiroRequ
     agendamento = db.query(Agendamento).get(id_agendamento)
     if not agendamento: raise HTTPException(status_code=404, detail="Agendamento não encontrado")
     
+    novo_barbeiro = db.query(Barbeiro).get(data.id_barbeiro)
+    if not novo_barbeiro:
+        raise HTTPException(status_code=404, detail="Novo barbeiro não encontrado.")
+
     agendamento.id_barbeiro = data.id_barbeiro
     db.commit()
     return {"mensagem": "Barbeiro atualizado"}
