@@ -49,7 +49,12 @@ def atualizar_status_agendamento(id_agendamento: int, data: UpdateStatusRequest,
         raise HTTPException(status_code=403, detail="Acesso negado")
 
     agendamento.status = data.status
-    if data.data_hora: agendamento.data_hora_inicio = datetime.fromisoformat(data.data_hora)
+    if data.data_hora:
+        novo_inicio = datetime.fromisoformat(data.data_hora)
+        agendamento.data_hora_inicio = novo_inicio
+        # Recalcula data fim mantendo a duração original
+        agendamento.data_hora_fim = novo_inicio + timedelta(minutes=agendamento.tempo_total_estimado)
+        
     db.commit()
     return {"mensagem": "Status atualizado"}
 

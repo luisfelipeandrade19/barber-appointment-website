@@ -57,7 +57,14 @@ def registro_financeiro(current_user: Usuario = Depends(get_current_user), db: S
         extract('month', Agendamento.data_hora_inicio) == mes,
         extract('year', Agendamento.data_hora_inicio) == ano
     ).all()
-    return {"mes": mes, "ano": ano, "total_ganhos": sum([a.valor_total for a in agendamentos]), "quantidade_agendamentos": len(agendamentos)}
+    
+    # Calcula comissão (assumindo que o campo comissao no banco é porcentagem, ex: 50.00 para 50%)
+    taxa_comissao = float(current_user.barbeiro.comissao) if current_user.barbeiro.comissao else 0.0
+    total_bruto = sum([float(a.valor_total) for a in agendamentos])
+    # Se tiver comissão definida usa ela, senão assume o total
+    total_liquido = total_bruto * (taxa_comissao / 100) if taxa_comissao > 0 else total_bruto
+
+    return {"mes": mes, "ano": ano, "total_ganhos": total_liquido, "quantidade_agendamentos": len(agendamentos)}
 
 @router.get('/api/barbeiros/{id_barbeiro}/servicos')
 def listar_servicos_barbeiro(id_barbeiro: int, db: Session = Depends(get_db)):

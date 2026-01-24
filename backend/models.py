@@ -10,7 +10,14 @@ from dotenv import load_dotenv
 load_dotenv() # Carrega variáveis do arquivo .env
 
 Base = declarative_base()
-engine = create_engine(os.getenv('DATABASE_URL', 'postgresql://postgres:1605@localhost:5432/barbersystem'))
+
+# Configuração de Produção para o Engine
+engine = create_engine(
+    os.getenv('DATABASE_URL', 'postgresql://postgres:1605@localhost:5432/barbersystem'),
+    pool_pre_ping=True,  # Verifica se a conexão está viva antes de usar (evita erros de "server closed the connection")
+    pool_size=10,        # Mantém 10 conexões abertas
+    max_overflow=20      # Permite criar mais 20 se as 10 estiverem ocupadas
+)
 _Session = sessionmaker(bind=engine)
 
 # Enums
@@ -243,37 +250,3 @@ class RegistroFinanceiro(Base):
     # Relacionamentos
     barbeiro = relationship("Barbeiro", back_populates="registros_financeiros")
     agendamento = relationship("Agendamento", back_populates="registros_financeiros")
-
-
-#Base.metadata.create_all(engine)
-
-def criar_tabelas():
-    print("Conectando ao banco...")
-    print(f"URL: {engine.url}")
-    
-    try:
-        # Testa a conexão primeiro
-        with engine.connect() as conn:
-            print("Conexão bem-sucedida!")
-        
-        # Cria as tabelas
-        Base.metadata.create_all(engine)
-        print("Tabelas criadas com sucesso!")
-        
-        # Lista tabelas criadas
-        with engine.connect() as conn:
-            from sqlalchemy import text
-            result = conn.execute(text("""
-                SELECT table_name 
-                FROM information_schema.tables 
-                WHERE table_schema = 'public'
-            """))
-            tables = [row[0] for row in result]
-            print(f"Tabelas: {', '.join(tables)}")
-            
-    except Exception as e:
-        print(f"ERRO: {e}")
-        raise
-    
-if __name__ == "__main__":
-    criar_tabelas()

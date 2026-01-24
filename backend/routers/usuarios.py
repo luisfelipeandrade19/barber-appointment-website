@@ -6,7 +6,7 @@ from schemas import BarbeiroCreateRequest, UpdatePerfilRequest
 from dependencies import get_db, get_current_user
 from sqlalchemy.exc import SQLAlchemyError
 
-router = APIRouter(tags=["Usuários"])
+router = APIRouter(tags=["Usuarios"])
 
 @router.post('/api/admin/barbeiros', status_code=status.HTTP_201_CREATED)
 def criar_barbeiro(data: BarbeiroCreateRequest, current_user: Usuario = Depends(get_current_user), db: Session = Depends(get_db)):
@@ -14,7 +14,7 @@ def criar_barbeiro(data: BarbeiroCreateRequest, current_user: Usuario = Depends(
         raise HTTPException(status_code=403, detail="Acesso negado")
 
     if db.query(Usuario).filter_by(email=data.email).first():
-        raise HTTPException(status_code=400, detail="Email já cadastrado")
+        raise HTTPException(status_code=400, detail="Email já registrado")
 
     try:
         novo_usuario = Usuario(
@@ -39,8 +39,8 @@ def criar_barbeiro(data: BarbeiroCreateRequest, current_user: Usuario = Depends(
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get('/api/usuarios')
-def listar_usuarios(current_user: Usuario = Depends(get_current_user), db: Session = Depends(get_db)):
-    usuarios = db.query(Usuario).all()
+def listar_usuarios(skip: int = 0, limit: int = 100, current_user: Usuario = Depends(get_current_user), db: Session = Depends(get_db)):
+    usuarios = db.query(Usuario).offset(skip).limit(limit).all()
     return [{"id": u.id_usuario, "nome": u.nome, "email": u.email, "tipo": u.tipo.value, "ativo": getattr(u, 'ativo', True)} for u in usuarios]
 
 @router.delete('/api/usuarios/{id_usuario}')
@@ -50,12 +50,11 @@ def deletar_usuario(id_usuario: int, current_user: Usuario = Depends(get_current
         
     usuario = db.query(Usuario).get(id_usuario)
     if not usuario:
-        raise HTTPException(status_code=404, detail="Usuário não encontrado")
+        raise HTTPException(status_code=404, detail="Usuario não encontrado")
     
     usuario.ativo = False
     db.commit()
-    return {"mensagem": "Usuário desativado com sucesso"}
-
+    return {"mensagem": "Usuario desativado com sucesso"}
 @router.put('/api/perfil')
 def atualizar_perfil(data: UpdatePerfilRequest, current_user: Usuario = Depends(get_current_user), db: Session = Depends(get_db)):
     if data.nome: current_user.nome = data.nome
