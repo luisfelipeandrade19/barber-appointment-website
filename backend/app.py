@@ -1,8 +1,15 @@
+from sqlalchemy import true
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from routers import auth, usuarios, barbeiros, clientes, agendamentos, notificacoes, servicos
 import uvicorn
+
+import models
+
+from models import engine, Base
+
+models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
@@ -38,4 +45,4 @@ def index():
     return {"mensagem": "API Barbearia Online"}
 
 if __name__ == '__main__':
-    uvicorn.run(app, host="127.0.0.1", port=5000)
+    uvicorn.run(app, host="127.0.0.1", port=5000, reload=True)
