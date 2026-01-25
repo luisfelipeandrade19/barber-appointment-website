@@ -1,5 +1,5 @@
 import FacebookLogin from '@greatsumini/react-facebook-login';
-import facebook from "../../assets/facebook.png"
+import facebook from "../../../assets/facebook.png"
 
 const FacebookLoginButton = () => {
   const appId = import.meta.env.VITE_FACEBOOK_APP_ID;
@@ -30,7 +30,7 @@ const FacebookLoginButton = () => {
         cursor: 'pointer',
         padding: 5,
         display: 'flex'
-        }}/>
+      }} />
     </FacebookLogin>
   );
 

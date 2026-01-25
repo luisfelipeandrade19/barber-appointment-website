@@ -1,42 +1,54 @@
-import person from "../../assets/ft.jpg"
-import GoogleLoginButton from "../../lib/components/googleLoginButton";
-import FacebookLoginButton from "../../lib/components/FacebookLoginButton";
+
+import GoogleLoginButton from "../../lib/components/googleButton/googleLoginButton";
+import FacebookLoginButton from "../../lib/components/facebookButton/FacebookLoginButton";
+import profile from "../../assets/foto-do-perfil.png"
 import "./loginPage.css"
+import { Link, useNavigate } from 'react-router-dom';
+import { useState } from "react";
+import LoginButton from "../../lib/components/loginButton/loginButton";
 
-function LoginPage(){
+function LoginPage() {
+  const navigate = useNavigate()
+  const [loading, setLoading] = useState(false)
 
-  
-    return(
+  const handleLogin = async () => {
+    setLoading(true)
+
+  }
+
+
+  return (
     <>
       <div className="login-container">
-        <img id="userImage" src={person} width={180}/>
+        <img className="profile-img" src={profile} width={180} />
         <form action="get">
-            <div className="inputs">
-              <p className="input-label">Email</p>
-              <input type="email" id="inputUsername" placeholder="Digite seu email"/>
-              <p className="input-label">Senha</p>
-              <input type="password" id="inputPassword" placeholder="******" />
-              <button id="loginButton">Login</button>
+          <div className="inputs">
+            <p className="input-label">Email</p>
+            <input type="email" id="inputUsername" placeholder="Digite seu email" />
+            <p className="input-label">Senha</p>
+            <input type="password" id="inputPassword" placeholder="******" />
+            <LoginButton />
+          </div>
+          <div className="socials">
+            <h2 id="titleSocialLogin">Logar com</h2>
+            <div className="socialLogin">
+              <GoogleLoginButton />
+              <FacebookLoginButton />
             </div>
-            <div className="socials">
-              <h2 id="titleSocialLogin">Logar com</h2>
-              <div className="socialLogin">
-                <GoogleLoginButton/>
-                <FacebookLoginButton/>
-              </div>
-              <footer>
-                <p>Não tem conta ainda?</p>
-                <p onClick={() =>{
-                  window.location.href = "/register"}} 
-                  style={{ cursor: 'pointer', color: 'blue'}}
-                  >Cadastrar-se
-                </p>
-              </footer>
-            </div>
+            <footer>
+              <p>Não tem conta ainda?</p>
+              <p onClick={() => {
+                window.location.href = "/register"
+              }}
+                style={{ cursor: 'pointer', color: 'blue' }}
+              >Cadastrar-se
+              </p>
+            </footer>
+          </div>
         </form>
       </div>
     </>
-)
+  )
 }
 
 
