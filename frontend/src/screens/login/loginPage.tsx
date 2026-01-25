@@ -9,11 +9,39 @@ import LoginButton from "../../lib/components/loginButton/loginButton";
 
 function LoginPage() {
   const navigate = useNavigate()
+  const [email, setEmail] = useState("")
+  const [senha, setSenha] = useState("")
+
+
   const [loading, setLoading] = useState(false)
 
   const handleLogin = async () => {
     setLoading(true)
+    try {
 
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: email, senha: senha }),
+      });
+
+      const data = await response.json()
+
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+
+      console.log("Login realizado com sucesso!");
+      navigate('/home');
+
+    } catch (error) {
+
+      alert("Falha no login. Verifique suas credenciais.");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   }
 
 
@@ -24,10 +52,10 @@ function LoginPage() {
         <form action="get">
           <div className="inputs">
             <p className="input-label">Email</p>
-            <input type="email" id="inputUsername" placeholder="Digite seu email" />
+            <input type="email" id="inputUsername" placeholder="Digite seu email" onChange={(e) => setEmail(e.target.value)} />
             <p className="input-label">Senha</p>
-            <input type="password" id="inputPassword" placeholder="******" />
-            <LoginButton />
+            <input type="password" id="inputPassword" placeholder="******" onChange={(e) => setSenha(e.target.value)} />
+            <LoginButton onClick={handleLogin}/>
           </div>
           <div className="socials">
             <h2 id="titleSocialLogin">Logar com</h2>
