@@ -3,7 +3,7 @@ import GoogleLoginButton from "../../lib/components/googleButton/googleLoginButt
 import FacebookLoginButton from "../../lib/components/facebookButton/FacebookLoginButton";
 import profile from "../../assets/foto-do-perfil.png"
 import "./loginPage.css"
-import { Link, useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 import { useState } from "react";
 import LoginButton from "../../lib/components/loginButton/loginButton";
 
@@ -29,8 +29,13 @@ function LoginPage() {
 
       const data = await response.json()
 
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      if (!response.ok) {
+        throw new Error(data.message || "Erro ao fazer login")
+      }
 
+      localStorage.setItem('accessToken', data.accessToken);
+
+      localStorage.setItem('refreshToken', data.refreshToken);
 
       console.log("Login realizado com sucesso!");
       navigate('/home');
@@ -55,7 +60,7 @@ function LoginPage() {
             <input type="email" id="inputUsername" placeholder="Digite seu email" onChange={(e) => setEmail(e.target.value)} />
             <p className="input-label">Senha</p>
             <input type="password" id="inputPassword" placeholder="******" onChange={(e) => setSenha(e.target.value)} />
-            <LoginButton onClick={handleLogin}/>
+            <LoginButton onClick={handleLogin} />
           </div>
           <div className="socials">
             <h2 id="titleSocialLogin">Logar com</h2>
