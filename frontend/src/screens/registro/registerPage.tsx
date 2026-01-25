@@ -1,5 +1,5 @@
-import GoogleLoginButton from "../../lib/components/googleLoginButton";
-import FacebookLoginButton from "../../lib/components/FacebookLoginButton";
+import GoogleLoginButton from "../../lib/components/googleButton/googleLoginButton";
+import FacebookLoginButton from "../../lib/components/facebookButton/FacebookLoginButton";
 import "./registerPage.css";
 
 function RegisterPage() {
@@ -8,8 +8,8 @@ function RegisterPage() {
       <div className="register-container">
 
         <header className="register-header">
-            <p className="title-create-account">Criar Conta</p>
-            <div className="register-socialLogin">
+          <p className="title-create-account">Criar Conta</p>
+          <div className="register-socialLogin">
             <GoogleLoginButton />
             <FacebookLoginButton />
           </div>
@@ -18,7 +18,7 @@ function RegisterPage() {
             <p>Registre-se com email</p>
           </div>
         </header>
-        
+
         <form action="get">
           <h2 className="userTitle">Nome de usuário</h2>
           <input type="text" id="userNamer" placeholder="Digite seu nome" />
@@ -38,8 +38,8 @@ function RegisterPage() {
 
           <footer className="register-footer">
             <p>Já tem uma conta?</p>
-            <p 
-              onClick={() => { window.location.href = "/" }} 
+            <p
+              onClick={() => { window.location.href = "/" }}
               style={{ cursor: 'pointer', color: 'blue' }}
             >
               Fazer Login

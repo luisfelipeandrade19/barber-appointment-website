@@ -20,19 +20,12 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    justify-content: center;
 }
 
 header h1 {
     font-size: 20px;
     font-weight: bold;
-}
-
-label {
-    display: block;
-    color: #00012F; 
-    font-size: 16px;
-    font-weight: bold;
-    margin-bottom: 6px;
 }
 
 .form-group {
@@ -45,30 +38,12 @@ label {
     background-color: #d8d8d8;
     border: 1px solid #b8b8b8;
     border-radius: 8px;
-    padding: 0 12px;
+    padding: 5px 12px;
     font-size: 15px;
     color: #333;
     outline: none;
-
 }
 
-input[type="date"].input-field::-webkit-calendar-picker-indicator {
-    filter: invert(24%) sepia(31%) saturate(2227%) hue-rotate(318deg) brightness(91%) contrast(92%);
-}
-
-footer {
-    border-top: 1px solid #eeeeee;
-    margin-top: auto; 
-    padding: 15px 0;
-    display: flex;
-    justify-content: space-around;
-    background-color: #ffffff;
-}
-
-
-.icon-nav {
-    width: 30px;
-    height: 30px;
-    border: 2px solid #0f0525;
-    border-radius: 4px;
+#forms{
+    margin-bottom: 25px;
 }

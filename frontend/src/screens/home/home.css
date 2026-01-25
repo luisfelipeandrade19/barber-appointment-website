@@ -1,0 +1,153 @@
+.home-container {
+    width: 100%;
+    max-width: 480px;
+    /* Limit width for mobile-like view */
+    margin: 0 auto;
+    padding-bottom: 90px;
+    /* Space for NavBar */
+    background-color: white;
+    min-height: 100vh;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.home-header {
+    background-color: white;
+    padding: 15px 20px;
+    /* border-bottom: 1px solid #f0f0f0; Optional separator */
+    display: flex;
+    align-items: center;
+}
+
+.home-logo {
+    height: 40px;
+    /* Adjust based on logo aspect ratio */
+    object-fit: contain;
+}
+
+.section-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 25px 20px 15px;
+    color: black;
+}
+
+.horizontal-scroll-container {
+    display: flex;
+    overflow-x: auto;
+    padding: 0 20px;
+    gap: 20px;
+    scrollbar-width: none;
+    /* Hide scrollbar Firefox */
+    -ms-overflow-style: none;
+    /* Hide scrollbar IE/Edge */
+    padding-bottom: 10px;
+    /* Space for shadow or bottom of cards */
+    scroll-snap-type: x mandatory;
+    /* Enable scroll snapping */
+}
+
+.horizontal-scroll-container::-webkit-scrollbar {
+    display: none;
+    /* Hide scrollbar Chrome/Safari */
+}
+
+.card {
+    min-width: 160px;
+    height: 140px;
+    background-color: #EEE4F0;
+    /* Approximate light purple from image */
+    border-radius: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    scroll-snap-align: center;
+    /* Snap cards to center */
+}
+
+/* Creating the abstract shapes inside the cards */
+.card-shapes {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    opacity: 0.3;
+    /* Subtle styling */
+}
+
+.shape-row {
+    display: flex;
+    gap: 5px;
+    align-items: flex-end;
+}
+
+.shape-triangle {
+    width: 0;
+    height: 0;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-bottom: 24px solid #9DA0A8;
+    border-radius: 4px;
+}
+
+.shape-circle {
+    width: 24px;
+    height: 24px;
+    background-color: #9DA0A8;
+    border-radius: 50%;
+}
+
+.shape-square {
+    width: 24px;
+    height: 24px;
+    background-color: #9DA0A8;
+    border-radius: 6px;
+}
+
+.shape-star {
+    /* Simple approximated star or jagged shape */
+    width: 28px;
+    height: 28px;
+    background-color: #9DA0A8;
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 20px;
+}
+
+.scroll-controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    /* Align roughly with title vertical center */
+}
+
+.scroll-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: none;
+    background-color: #EEE4F0;
+    color: #333;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+    font-family: monospace;
+    /* For better arrow alignment */
+}
+
+.scroll-btn:hover {
+    background-color: #dcd0de;
+}
+
+.scroll-btn:active {
+    background-color: #cbbccf;
+}

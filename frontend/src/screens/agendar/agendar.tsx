@@ -10,7 +10,7 @@ function Agendar(){
         </header>
 
         <div className=" form-group">
-          <div className="barber-form-group">
+          <div className="barber-form-group" id="forms">
             <label>Barbeiro:</label>
             <select className="input-field">
                 <option value="" disabled selected>Selecione um barbeiro</option>
@@ -18,7 +18,7 @@ function Agendar(){
             </select>
           </div>
 
-          <div className="services-form-group">
+          <div className="services-form-group" id="forms">
               <label>Serviços:</label>
               <select className="input-field">
                   <option value="" disabled selected>Escolha o serviço</option>
@@ -28,12 +28,12 @@ function Agendar(){
               </select>
           </div>
 
-            <div className="date-form-group">
+            <div className="date-form-group" id="forms">
                 <label>Data:</label>
                 <input type="date" className="input-field" id="data-agendamento"/>
             </div>
 
-          <div className="time-form-group">
+          <div className="time-form-group" id="forms">
             <label>Horários disponíveis:</label>
             <select className="input-field">
               <option value="" disabled selected>Selecione um horário</option>
@@ -45,6 +45,9 @@ function Agendar(){
               <option value="11:30">11:30</option>
               <option value="12:00">12:00</option>
             </select>
+          </div>
+          <div className="button-app">
+              <button className="appointment-page-btn" id="btn-appoint">AGENDAR AGORA</button>
           </div>
         </div>
 
