@@ -37,24 +37,18 @@ function RegisterPage() {
           confirmar_senha: confSenha
         }),
       })
-      // const data = await response.json()
 
-      // if (!response.ok) {
-      //   throw new Error(data.detail || "Erro de registro")
-      // }
+      console.log("Status da resposta:", response.status); 
 
-      // --- MUDANÇA AQUI ---
-      console.log("Status da resposta:", response.status); // Vai mostrar 200, 404, 500, etc.
-
-      const text = await response.text(); // Lê como texto primeiro
-      console.log("Corpo da resposta:", text); // Mostra o que veio (pode ser vazio ou HTML de erro)
+      const text = await response.text(); 
+      console.log("Corpo da resposta:", text); 
 
       if (!text) {
         throw new Error(`O servidor respondeu com status ${response.status} mas sem conteúdo.`);
       }
 
-      const data = JSON.parse(text); // Tenta converter manualmente
-      // --------------------
+      const data = JSON.parse(text); 
+
 
       if (!response.ok) {
         throw new Error(data.detail || "Erro de registro")

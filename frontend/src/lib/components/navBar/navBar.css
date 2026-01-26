@@ -1,13 +1,20 @@
-.navBar-container{
+.navBar-container {
     position: fixed;
     bottom: 0;
-    left: 0;
-    width: 100%;
-    border-top:1px solid rgba(0, 0, 0, 0.397);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 430px;
+    height: 70px; /* Fixar em px é melhor que vh para ícones */
     background-color: white;
-    height: 7vh;
-    text-align: center;
-    padding: 1%;
+    border-top: 1px solid rgba(0, 0, 0, 0.397);
+    
+    /* O Flexbox agora "enxerga" os 3 Links */
+    display: flex;
+    justify-content: space-around; 
+    align-items: center;
+    
+    box-sizing: border-box;
+    padding: 0 35px;
 }
 
 #imgs-nav{

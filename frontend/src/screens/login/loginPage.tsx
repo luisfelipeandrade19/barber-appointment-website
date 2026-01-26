@@ -3,7 +3,7 @@ import GoogleLoginButton from "../../lib/components/googleButton/googleLoginButt
 import FacebookLoginButton from "../../lib/components/facebookButton/FacebookLoginButton";
 import profile from "../../assets/foto-do-perfil.png"
 import "./loginPage.css"
-import {  useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useState } from "react";
 import LoginButton from "../../lib/components/loginButton/loginButton";
 
@@ -36,6 +36,8 @@ function LoginPage() {
       localStorage.setItem('accessToken', data.accessToken);
 
       localStorage.setItem('refreshToken', data.refreshToken);
+
+      localStorage.setItem('usuario', JSON.stringify(data.usuario));
 
       console.log("Login realizado com sucesso!");
       navigate('/home');

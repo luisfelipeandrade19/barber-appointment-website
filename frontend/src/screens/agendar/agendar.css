@@ -39,11 +39,9 @@ header h1 {
     border: 1px solid #b8b8b8;
     border-radius: 8px;
     padding: 5px 12px;
+   margin-bottom: 15px;
     font-size: 15px;
     color: #333;
     outline: none;
 }
 
-#forms{
-    margin-bottom: 25px;
-}

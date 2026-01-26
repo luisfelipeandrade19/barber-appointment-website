@@ -6,7 +6,7 @@ FROM python:3.13-slim
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     POETRY_HOME="/opt/poetry" \
-    POETRY_VIRTUALENVS_IN_PROJECT=true \
+    POETRY_VIRTUALENVS_IN_PROJECT=false \
     POETRY_NO_INTERACTION=1
 
 # Adicionar o diretório do Poetry ao PATH

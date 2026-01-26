@@ -1,23 +1,41 @@
-.home-container {
-    width: 100%;
-    max-width: 480px;
-    /* Limit width for mobile-like view */
-    margin: 0 auto;
-    padding-bottom: 90px;
-    /* Space for NavBar */
-    background-color: white;
-    min-height: 100vh;
+.container {
+    /* Define a largura máxima típica de um celular grande */
+    max-width: 430px; 
+    
+    /* Garante que ocupe 100% em telas menores que 430px */
+    width: 100%; 
+    
+    /* Centraliza o "celular" no meio da tela do monitor */
+    margin: 0 auto; 
+    
+    /* Mantém a altura total da tela */
+    min-height: 100vh; 
+    
+    /* Opcional: uma borda ou sombra ajuda a visualizar o limite no PC */
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    
+    display: flex;
+    flex-direction: column;
     box-sizing: border-box;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+    
+    
+
+    
+    
 }
 
-.home-header {
-    background-color: white;
-    padding: 15px 20px;
-    /* border-bottom: 1px solid #f0f0f0; Optional separator */
+.header {
+    width: 100%;
     display: flex;
-    align-items: center;
+    justify-content: center; /* Centraliza a logo horizontalmente */
+    align-items: center;     /* Centraliza verticalmente */
+    padding-top: 20px;       /* Evita que a logo fique grudada no topo do navegador */
+    flex-shrink: 0;          /* Impede que o container "esmague" a logo */
 }
+
 
 .home-logo {
     height: 40px;

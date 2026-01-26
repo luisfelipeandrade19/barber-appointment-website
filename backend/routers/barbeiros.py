@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import extract
-from models import Barbeiro, Especialidade, Disponibilidade, Servico, Agendamento, Usuario, TipoUsuario
+from models import Barbeiro, Especialidade, Disponibilidade, Servico, Agendamento, Usuario, TipoUsuario, DisponibilidadeBarbeiro, TipoDisponibilidade
 from schemas import EspecialidadeRequest, DisponibilidadeRequest, ServicoRequest
 from dependencies import get_db, get_current_user
 from datetime import datetime
@@ -33,8 +33,20 @@ def criar_especialidade(data: EspecialidadeRequest, current_user: Usuario = Depe
 
 @router.get('/api/barbeiros/{id_barbeiro}/disponibilidade')
 def listar_disponibilidade(id_barbeiro: int, db: Session = Depends(get_db)):
-    disponibilidades = db.query(Disponibilidade).filter_by(id_barbeiro=id_barbeiro).all()
-    return [{"id": d.id_disponibilidade, "inicio": d.data_hora_inicio, "fim": d.data_hora_fim, "disponivel": d.disponivel} for d in disponibilidades]
+    disponibilidades = db.query(DisponibilidadeBarbeiro).filter(
+        DisponibilidadeBarbeiro.id_barbeiro == id_barbeiro
+    ).all()
+    resultados = []
+    for d in disponibilidades:
+        # Combina data (Date) e hora_inicio (Time) para datetime
+        data_hora_combinada = datetime.combine(d.data, d.hora_inicio)
+        
+        resultados.append({
+            "id": d.id_disponibilidade,
+            "inicio": data_hora_combinada.isoformat(), 
+            "disponivel": True
+        })
+    return resultados
 
 @router.post('/api/barbeiros/disponibilidade')
 def criar_disponibilidade(data: DisponibilidadeRequest, current_user: Usuario = Depends(get_current_user), db: Session = Depends(get_db)):
