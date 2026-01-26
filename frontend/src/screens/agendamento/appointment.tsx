@@ -81,7 +81,7 @@ function Appointment() {
     return (
         <>
             <div className="appointment-container">
-                <header className="appointment-header">
+                <header className="header">
                     <img className="img-logo" src={logoImg} alt="logo site" />
                 </header>
                 <div className="appointment-content-main">

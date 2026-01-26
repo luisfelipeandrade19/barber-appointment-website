@@ -1,11 +1,25 @@
 .appointment-container {
-    height: 100vh;
+    width: 430px; 
+    margin: 0 auto; 
+    
+    /* Mantém a altura total da tela */
+    min-height: 100vh; 
+    
+    /* Opcional: uma borda ou sombra ajuda a visualizar o limite no PC */
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
-    padding-bottom: 70px;
-    position: relative;
-    /* For modal positioning context if needed */
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Garante que o conteúdo comece do topo */
+    align-items: center;         /* Centraliza os itens horizontalmente */
+    overflow-y: auto;            /* Ativa a rolagem vertical */
+    height: 100vh;
 }
 
 .appointment-header {
@@ -15,9 +29,10 @@
 .appointment-page-btn {
     background-color: red;
     border: none;
-    width: 318px;
+    width: 100%;
     height: 44px;
     border-radius: 14px;
+
 }
 
 .title-appointments {

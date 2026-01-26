@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import logo from "../../assets/logoSite.png";
+import logoImg from "../../assets/logoSite.png"
 import "./home.css";
 
 function Home() {
@@ -18,9 +18,9 @@ function Home() {
     };
 
     return (
-        <div className="home-container">
-            <header className="home-header">
-                <img src={logo} alt="Cortei Logo" className="home-logo" />
+        <div className="container">
+            <header className="header">
+                <img className="img-logo" src={logoImg} alt="logo site" />               
             </header>
 
             <section className="scroll-section">
