@@ -10,7 +10,7 @@ function NavBar(){
     return(
         <>
         <div className="navBar-container">
-            <nav>
+            
                 <Link to="/home"><img id="imgs-nav" className="home-btn" 
                 src={homebtn} alt="Botao home" /></Link>
 
@@ -19,7 +19,7 @@ function NavBar(){
 
                 <Link to="/perfil"><img id="imgs-nav" className="profile-btn" 
                 src={profilebtn} alt="Botao perfil" /></Link>
-            </nav>
+            
         </div>
         </>
     )
