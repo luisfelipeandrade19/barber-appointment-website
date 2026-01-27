@@ -10,10 +10,11 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import Appointment from "../../screens/agendamento/appointment";
 import HistoryPage from "../../screens/historico/historyPage";
 import EditProfile from "../../screens/edit/editProfile";
+import CadastrarBarbeiro from "../../screens/cadastrar/cadastrarBarbeiro";
 
 function Layout() {
   const location = useLocation();
-  const hideNavBarPaths = ['/', '/register', '/editar'];
+  const hideNavBarPaths = ['/', '/register', '/editar', '/cadastrar'];
   const showNavBar = !hideNavBarPaths.includes(location.pathname);
 
   return (
@@ -27,6 +28,7 @@ function Layout() {
         <Route path="/historico" element={<HistoryPage />} />
         <Route path="/perfil" element={<ProfilePage />} />
         <Route path="/editar" element={<EditProfile />} />
+        <Route path="/cadastrar" element={<CadastrarBarbeiro />} />
       </Routes>
       {showNavBar && <NavBar />}
     </>

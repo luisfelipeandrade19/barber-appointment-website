@@ -51,14 +51,15 @@ function Agendar() {
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.message || "Erro ao fazer agendamento!")
+        console.error("Erro backend:", data);
+        throw new Error(data.detail || "Erro ao fazer agendamento!")
       }
 
       navigate('/agendamentos')
 
-    } catch (error) {
+    } catch (error: any) {
       console.error("Erro na requisicao", error)
-      alert("Erro ao realizar agendamento: ")
+      alert(`Erro ao realizar agendamento: ${error.message}`)
     } finally {
       setLoading(false)
     }
