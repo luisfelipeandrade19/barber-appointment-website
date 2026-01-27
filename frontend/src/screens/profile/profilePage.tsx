@@ -50,10 +50,7 @@ function ProfilePage() {
         return <div className="profile-container"><p>Carregando...</p></div>;
     }
 
-    const formatDate = (dateString?: string) => {
-        if (!dateString) return "";
-        return new Date(dateString).toLocaleDateString('pt-BR');
-    };
+
 
     return (
         <div className="profile-container">
@@ -80,8 +77,8 @@ function ProfilePage() {
                     <p className="info-label">Telefone</p>
                     <p className="info-value">{user.telefone || "Não informado"}</p>
                 </div>
-                
-                
+
+
             </section>
 
             <section className="actions-section">
@@ -107,7 +104,7 @@ function ProfilePage() {
                     <span>Cancelar agenda</span>
                 </div>
 
-        
+
             </section>
         </div>
     );
