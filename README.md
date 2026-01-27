@@ -99,7 +99,23 @@ barber-appointment-website/
 
 ---
 
-## 🐳 Utilizando com Docker
+## � Documentação dos Endpoints (Routers)
+
+A API é modularizada através de arquivos de rota (`routers`) localizados em `backend/routers/`. Abaixo está a descrição de cada módulo:
+
+| Arquivo | Descrição |
+| :--- | :--- |
+| **`agendamentos.py`** | Gerencia o ciclo de vida dos agendamentos. Permite criar novos agendamentos (com validação de conflitos de horário), atualizar status e reatribuir barbeiros. |
+| **`auth.py`** | Responsável pela autenticação e segurança. Gerencia registro de usuários, login e emissão de tokens JWT (Access e Refresh). |
+| **`barbeiros.py`** | Endpoints específicos para barbeiros. Gerencia disponibilidade de horários, especialidades, serviços oferecidos e relatórios financeiros (comissões). |
+| **`clientes.py`** | Focado na experiência do cliente. Permite listar histórico de agendamentos e gerenciar preferências pessoais. |
+| **`notificacoes.py`** | Sistema de mensageria interna. Cria e lista notificações para os usuários sobre status de agendamentos e promoções. |
+| **`servicos.py`** | Catálogo de serviços. Lista os serviços disponíveis para agendamento, com preços e duração estimada. |
+| **`usuarios.py`** | Gestão geral de usuários e administração. Inclui criação de barbeiros (admin), listagem de usuários e gerenciamento de perfil. |
+
+---
+
+## �🐳 Utilizando com Docker
 
 O ambiente é totalmente controlado pelo `docker-compose.yml`, que define três serviços principais:
 
@@ -140,39 +156,6 @@ O ambiente é totalmente controlado pelo `docker-compose.yml`, que define três 
     ```bash
     docker exec -it barber_db psql -U postgres -d barbersystem
     ```
-
----
-
-## 💻 Desenvolvimento Local (Frontend)
-
-Caso queira executar o frontend localmente fora do Docker (para desenvolvimento ágil com HMR):
-
-1.  **Navegue até a pasta do frontend:**
-    ```bash
-    cd frontend
-    ```
-
-2.  **Instale as dependências:**
-    ```bash
-    npm install
-    ```
-
-3.  **Execute em modo de desenvolvimento:**
-    ```bash
-    npm run dev
-    ```
-    Acesse em [http://localhost:5173](http://localhost:5173).
-
-### Scripts Disponíveis
-
-No diretório `frontend`, você pode executar:
-
-*   `npm run dev`: Inicia o servidor de desenvolvimento.
-*   `npm run build`: Compila o projeto para produção.
-*   `npm run preview`: Visualiza o build de produção localmente.
-*   `npm run lint`: Executa a verificação de código com ESLint.
-*   `npm test`: Roda os testes E2E com Playwright.
-*   `npm run test:ui`: Roda os testes com interface visual.
 
 ---
 
