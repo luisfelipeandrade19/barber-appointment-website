@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import extract
-from models import Barbeiro, Especialidade, Disponibilidade, Servico, Agendamento, Usuario, TipoUsuario, DisponibilidadeBarbeiro, TipoDisponibilidade
+from models import Barbeiro, Especialidade, Disponibilidade, Servico, Agendamento, Usuario, TipoUsuario, DisponibilidadeBarbeiro, TipoDisponibilidade, StatusAgendamento
 from schemas import EspecialidadeRequest, DisponibilidadeRequest, ServicoRequest
 from dependencies import get_db, get_current_user
 from datetime import datetime
@@ -36,16 +36,33 @@ def listar_disponibilidade(id_barbeiro: int, db: Session = Depends(get_db)):
     disponibilidades = db.query(DisponibilidadeBarbeiro).filter(
         DisponibilidadeBarbeiro.id_barbeiro == id_barbeiro
     ).all()
+
+    # Buscar agendamentos ativos
+    agendamentos = db.query(Agendamento).filter(
+        Agendamento.id_barbeiro == id_barbeiro,
+        Agendamento.status.notin_([StatusAgendamento.CANCELADO, StatusAgendamento.RECUSADO, StatusAgendamento.NAO_COMPARECEU])
+    ).all()
+
     resultados = []
     for d in disponibilidades:
         # Combina data (Date) e hora_inicio (Time) para datetime
-        data_hora_combinada = datetime.combine(d.data, d.hora_inicio)
+        slot_inicio = datetime.combine(d.data, d.hora_inicio)
+        slot_fim = datetime.combine(d.data, d.hora_fim)
         
-        resultados.append({
-            "id": d.id_disponibilidade,
-            "inicio": data_hora_combinada.isoformat(), 
-            "disponivel": True
-        })
+        ocupado = False
+        for agendamento in agendamentos:
+            # Verifica sobreposicao de horario
+            # (SlotInicio < AgendamentoFim) E (SlotFim > AgendamentoInicio)
+            if slot_inicio < agendamento.data_hora_fim and slot_fim > agendamento.data_hora_inicio:
+                ocupado = True
+                break
+        
+        if not ocupado:
+            resultados.append({
+                "id": d.id_disponibilidade,
+                "inicio": slot_inicio.isoformat(), 
+                "disponivel": True
+            })
     return resultados
 
 @router.post('/api/barbeiros/disponibilidade')
