@@ -47,12 +47,14 @@ O sistema foi projetado para rodar de forma limpa e isolada utilizando **Docker*
 
 ## 🛠️ Tecnologias e Dependências
 
-### Frontend (Em Desenvolvimento)
+### Frontend
 *   **Biblioteca**: React 19
 *   **Build Tool**: Vite
 *   **Linguagem**: TypeScript
 *   **Testes E2E**: Playwright
 *   **Roteamento**: React Router DOM 7
+*   **Estilização**: CSS Modules / Vanilla CSS
+*   **Autenticação Social**: Google & Facebook Login
 *   **Linting**: ESLint
 
 ### Backend
@@ -89,7 +91,7 @@ barber-appointment-website/
 │   ├── Dockerfile          # Definição da imagem Docker do backend
 │   ├── pyproject.toml      # Arquivo de configuração e dependências (Poetry)
 │   └── .env                # Variáveis de ambiente (não versionado por segurança)
-├── frontend/               # Código fonte do Frontend (Em desenvolvimento)
+├── frontend/               # Código fonte do Frontend (Aplicação React)
 ├── docker-compose.yml      # Orquestração dos serviços (App + Banco)
 ├── .gitignore              # Arquivos ignorados pelo Git
 └── README.md               # Documentação do projeto
@@ -97,7 +99,23 @@ barber-appointment-website/
 
 ---
 
-## 🐳 Utilizando com Docker
+## � Documentação dos Endpoints (Routers)
+
+A API é modularizada através de arquivos de rota (`routers`) localizados em `backend/routers/`. Abaixo está a descrição de cada módulo:
+
+| Arquivo | Descrição |
+| :--- | :--- |
+| **`agendamentos.py`** | Gerencia o ciclo de vida dos agendamentos. Permite criar novos agendamentos (com validação de conflitos de horário), atualizar status e reatribuir barbeiros. |
+| **`auth.py`** | Responsável pela autenticação e segurança. Gerencia registro de usuários, login e emissão de tokens JWT (Access e Refresh). |
+| **`barbeiros.py`** | Endpoints específicos para barbeiros. Gerencia disponibilidade de horários, especialidades, serviços oferecidos e relatórios financeiros (comissões). |
+| **`clientes.py`** | Focado na experiência do cliente. Permite listar histórico de agendamentos e gerenciar preferências pessoais. |
+| **`notificacoes.py`** | Sistema de mensageria interna. Cria e lista notificações para os usuários sobre status de agendamentos e promoções. |
+| **`servicos.py`** | Catálogo de serviços. Lista os serviços disponíveis para agendamento, com preços e duração estimada. |
+| **`usuarios.py`** | Gestão geral de usuários e administração. Inclui criação de barbeiros (admin), listagem de usuários e gerenciamento de perfil. |
+
+---
+
+## �🐳 Utilizando com Docker
 
 O ambiente é totalmente controlado pelo `docker-compose.yml`, que define três serviços principais:
 
