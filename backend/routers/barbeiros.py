@@ -51,8 +51,7 @@ def listar_disponibilidade(id_barbeiro: int, db: Session = Depends(get_db)):
         
         ocupado = False
         for agendamento in agendamentos:
-            # Verifica sobreposicao de horario
-            # (SlotInicio < AgendamentoFim) E (SlotFim > AgendamentoInicio)
+
             if slot_inicio < agendamento.data_hora_fim and slot_fim > agendamento.data_hora_inicio:
                 ocupado = True
                 break

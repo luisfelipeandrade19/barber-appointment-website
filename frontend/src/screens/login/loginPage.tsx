@@ -13,10 +13,10 @@ function LoginPage() {
   const [senha, setSenha] = useState("")
 
 
-  const [loading, setLoading] = useState(false)
+
+
 
   const handleLogin = async () => {
-    setLoading(true)
     try {
 
       const response = await fetch('/api/login', {
@@ -33,7 +33,7 @@ function LoginPage() {
         throw new Error(data.message || "Erro ao fazer login")
       }
 
-      localStorage.setItem('accessToken', data.accessToken);
+      localStorage.setItem('accessToken', data.access_token);
 
       localStorage.setItem('refreshToken', data.refreshToken);
 
@@ -47,7 +47,6 @@ function LoginPage() {
       alert("Falha no login. Verifique suas credenciais.");
       console.error(error);
     } finally {
-      setLoading(false);
     }
   }
 

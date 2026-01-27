@@ -2,7 +2,7 @@ import { useState } from "react";
 import BarberFormGroup from "../../lib/components/barberFormGroup/barberFormGroup";
 import "./agendar.css";
 import ServicesFormGroup from "../../lib/components/servicesFormGroup/servicesFormGroup";
-import { data, useActionData, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import TimeFormGroup from "../../lib/components/timeFormGroup/timeFormGroup";
 
 function Agendar() {

@@ -1,76 +1,83 @@
 import logoImg from "../../assets/logoSite.png"
 import exemplo from "../../assets/foto-do-perfil.png"
 import "./appointment.css"
-import { Link } from "react-router-dom"
-import { useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import { useState, useEffect } from "react"
 
 function Appointment() {
 
-    const [appointments, setAppointments] = useState([
-        {
-            id: 1,
-            barberName: "Felipe",
-            contact: "(88) 99999-1111",
-            date: "12/12/2025",
-            time: "14:30h",
-            services: "Barba e cabelo",
-            image: exemplo
-        }
-        ,
-        {
-            id: 2,
-            barberName: "João",
-            contact: "(88) 99999-2222",
-            date: "13/12/2025",
-            time: "09:00h",
-            services: "Corte Social",
-            image: exemplo
-        },
-        {
-            id: 3,
-            barberName: "Carlos",
-            contact: "(88) 99999-3333",
-            date: "13/12/2025",
-            time: "10:00h",
-            services: "Barba",
-            image: exemplo
-        },
-        {
-            id: 4,
-            barberName: "Carlos",
-            contact: "(88) 99999-3333",
-            date: "13/12/2025",
-            time: "10:00h",
-            services: "Barba",
-            image: exemplo
-        },
-        {
-            id: 5,
-            barberName: "Carlos",
-            contact: "(88) 99999-3333",
-            date: "13/12/2025",
-            time: "10:00h",
-            services: "Barba",
-            image: exemplo
-        },
-        {
-            id: 6,
-            barberName: "Carlos",
-            contact: "(88) 99999-3333",
-            date: "13/12/2025",
-            time: "10:00h",
-            services: "Barba",
-            image: exemplo
-        }
-
-    ])
-
+    const [appointments, setAppointments] = useState<any[]>([])
     const [cancelId, setCancelId] = useState<number | null>(null);
+    const navigate = useNavigate();
 
-    const handleDelete = () => {
+    const fetchAppointments = async () => {
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+            console.error("No access token found");
+            // If specific route is protected, maybe redirect
+            // navigate('/'); 
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/agendamentos', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                // Frontend expects `image` property, add default if missing or map it
+                const dataWithImage = data.map((item: any) => ({
+                    ...item,
+                    image: exemplo // Using default image for now
+                })).filter((item: any) => item.status !== 'cancelado' && item.status !== 'recusado');
+                setAppointments(dataWithImage);
+            } else if (response.status === 401) {
+                console.error("Unauthorized. Redirecting to login.");
+                localStorage.removeItem('accessToken');
+                navigate('/');
+            } else {
+                console.error("Failed to fetch appointments:", response.status);
+            }
+        } catch (error) {
+            console.error("Error fetching appointments:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchAppointments();
+    }, []);
+
+    const handleDelete = async () => {
         if (cancelId !== null) {
-            setAppointments(appointments.filter(app => app.id !== cancelId));
-            setCancelId(null);
+            const token = localStorage.getItem('accessToken');
+            if (!token) {
+                alert("Você precisa estar logado.");
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/agendamentos/${cancelId}/status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ status: 'cancelado' })
+                });
+
+                if (response.ok) {
+                    setAppointments(appointments.filter(app => app.id !== cancelId));
+                } else {
+                    alert("Erro ao cancelar agendamento.");
+                }
+            } catch (error) {
+                console.error("Erro ao cancelar:", error);
+                alert("Erro ao cancelar agendamento.");
+            } finally {
+                setCancelId(null);
+            }
         }
     };
 

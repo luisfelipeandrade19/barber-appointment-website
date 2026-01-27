@@ -70,7 +70,10 @@ def atualizar_status_agendamento(id_agendamento: int, data: UpdateStatusRequest,
     if current_user.id_usuario not in [agendamento.id_cliente, agendamento.id_barbeiro] and current_user.tipo != TipoUsuario.ADMIN:
         raise HTTPException(status_code=403, detail="Acesso negado")
 
-    agendamento.status = data.status
+    try:
+        agendamento.status = StatusAgendamento(data.status)
+    except ValueError:
+        raise HTTPException(status_code=400, detail=f"Status inválido. Status permitidos: {[e.value for e in StatusAgendamento]}")
     if data.data_hora:
         novo_inicio = datetime.fromisoformat(data.data_hora)
         agendamento.data_hora_inicio = novo_inicio
@@ -92,3 +95,37 @@ def atualizar_barbeiro_agendamento(id_agendamento: int, data: UpdateBarbeiroRequ
     agendamento.id_barbeiro = data.id_barbeiro
     db.commit()
     return {"mensagem": "Barbeiro atualizado"}
+
+@router.get('/api/agendamentos')
+def listar_meus_agendamentos(current_user: Usuario = Depends(get_current_user), db: Session = Depends(get_db)):
+    query = db.query(Agendamento)
+    
+    if current_user.tipo == TipoUsuario.CLIENTE:
+        query = query.filter(Agendamento.id_cliente == current_user.id_usuario)
+    elif current_user.tipo == TipoUsuario.BARBEIRO:
+        query = query.filter(Agendamento.id_barbeiro == current_user.id_usuario)
+    # Se for ADMIN, vê todos (ou poderíamos filtrar se quisesse)
+    
+    agendamentos = query.order_by(Agendamento.data_hora_inicio.desc()).all()
+    
+    resultados = []
+    for a in agendamentos:
+        # Formatar a resposta para facilitar o frontend
+        # Precisamos do nome do barbeiro, contato, data, hora, servicos
+        
+        # Recuperar servicos
+        servicos_nomes = [s.servico.nome for s in a.agendamento_servicos]
+        servicos_str = ", ".join(servicos_nomes)
+        
+        resultados.append({
+            "id": a.id_agendamento,
+            "barberName": a.barbeiro.usuario.nome if a.barbeiro and a.barbeiro.usuario else "Desconhecido",
+            "contact": a.barbeiro.usuario.telefone if a.barbeiro and a.barbeiro.usuario else "", # Assumindo telefone no usuario
+            "date": a.data_hora_inicio.strftime("%d/%m/%Y"),
+            "time": a.data_hora_inicio.strftime("%H:%Mh"),
+            "services": servicos_str,
+            "status": a.status.value, # Importante para saber se está cancelado
+            # "image": ... (imagem do perfil não temos fácil agora, frontend pode usar default)
+        })
+        
+    return resultados

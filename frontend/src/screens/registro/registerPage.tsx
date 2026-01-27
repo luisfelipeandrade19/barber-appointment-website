@@ -11,15 +11,14 @@ function RegisterPage() {
   const [senha, setSenha] = useState("")
   const [confSenha, setConfSenha] = useState("")
 
-  const [loading, setLoading] = useState(false)
+
+
 
   const handleRegister = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    setLoading(true)
 
     if (senha !== confSenha) {
       alert("As senhas não coincidem!");
-      setLoading(false);
       return;
 
     }
@@ -37,18 +36,24 @@ function RegisterPage() {
           confirmar_senha: confSenha
         }),
       })
+      // const data = await response.json()
 
-      console.log("Status da resposta:", response.status); 
+      // if (!response.ok) {
+      //   throw new Error(data.detail || "Erro de registro")
+      // }
 
-      const text = await response.text(); 
-      console.log("Corpo da resposta:", text); 
+      // --- MUDANÇA AQUI ---
+      console.log("Status da resposta:", response.status); // Vai mostrar 200, 404, 500, etc.
+
+      const text = await response.text(); // Lê como texto primeiro
+      console.log("Corpo da resposta:", text); // Mostra o que veio (pode ser vazio ou HTML de erro)
 
       if (!text) {
         throw new Error(`O servidor respondeu com status ${response.status} mas sem conteúdo.`);
       }
 
-      const data = JSON.parse(text); 
-
+      const data = JSON.parse(text); // Tenta converter manualmente
+      // --------------------
 
       if (!response.ok) {
         throw new Error(data.detail || "Erro de registro")
@@ -66,7 +71,6 @@ function RegisterPage() {
       console.error("DETALHES DO ERRO:", error);
       alert(`Erro ao tentar registrar-se: ${error.message}`)
     } finally {
-      setLoading(false);
     }
   }
 
