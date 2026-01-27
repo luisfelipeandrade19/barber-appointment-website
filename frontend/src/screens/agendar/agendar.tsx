@@ -16,7 +16,6 @@ function Agendar() {
 
   const [loading, setLoading] = useState(false)
 
-  // Retrieve client ID from localStorage
   const usuarioLogado = localStorage.getItem('usuario');
   const ID_CLIENTE = usuarioLogado ? JSON.parse(usuarioLogado).id : null;
 
