@@ -29,7 +29,8 @@ class BarbeiroCreateRequest(BaseModel):
     nome: str
     email: str
     senha: str
-    especialidade: str
+    telefone: str
+    especialidade: str = "Geral"
 
 class EspecialidadeRequest(BaseModel):
     nome: str

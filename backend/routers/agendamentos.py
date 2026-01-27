@@ -11,9 +11,9 @@ router = APIRouter(tags=["Agendamentos"])
 def criar_agendamento(data: AgendamentoRequest, db: Session = Depends(get_db)):
     try:
         # Validações de Integridade
-        cliente = db.query(Usuario).filter(Usuario.id_usuario == data.id_cliente, Usuario.tipo == TipoUsuario.CLIENTE).first()
+        cliente = db.query(Usuario).filter(Usuario.id_usuario == data.id_cliente).first()
         if not cliente:
-            raise HTTPException(status_code=404, detail="Cliente não encontrado.")
+            raise HTTPException(status_code=404, detail="Usuario não encontrado.")
 
         barbeiro = db.query(Barbeiro).filter(Barbeiro.id_barbeiro == data.id_barbeiro).first()
         if not barbeiro:
@@ -117,10 +117,17 @@ def listar_meus_agendamentos(current_user: Usuario = Depends(get_current_user), 
         servicos_nomes = [s.servico.nome for s in a.agendamento_servicos]
         servicos_str = ", ".join(servicos_nomes)
         
+        if current_user.tipo == TipoUsuario.BARBEIRO:
+            nome_exibicao = a.cliente.usuario.nome if a.cliente and a.cliente.usuario else "Cliente Desconhecido"
+            contato_exibicao = a.cliente.usuario.telefone if a.cliente and a.cliente.usuario else ""
+        else:
+            nome_exibicao = a.barbeiro.usuario.nome if a.barbeiro and a.barbeiro.usuario else "Barbeiro Desconhecido"
+            contato_exibicao = a.barbeiro.usuario.telefone if a.barbeiro and a.barbeiro.usuario else ""
+
         resultados.append({
             "id": a.id_agendamento,
-            "barberName": a.barbeiro.usuario.nome if a.barbeiro and a.barbeiro.usuario else "Desconhecido",
-            "contact": a.barbeiro.usuario.telefone if a.barbeiro and a.barbeiro.usuario else "", # Assumindo telefone no usuario
+            "barberName": nome_exibicao,
+            "contact": contato_exibicao,
             "date": a.data_hora_inicio.strftime("%d/%m/%Y"),
             "time": a.data_hora_inicio.strftime("%H:%Mh"),
             "services": servicos_str,

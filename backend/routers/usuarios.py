@@ -1,10 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from werkzeug.security import generate_password_hash
-from models import Usuario, Barbeiro, TipoUsuario
+from models import Usuario, Barbeiro, TipoUsuario, Servico, DisponibilidadeBarbeiro, TipoDisponibilidade
 from schemas import BarbeiroCreateRequest, UpdatePerfilRequest
 from dependencies import get_db, get_current_user
 from sqlalchemy.exc import SQLAlchemyError
+from datetime import datetime, timedelta, time, date
 
 router = APIRouter(tags=["Usuarios"])
 
@@ -17,23 +18,64 @@ def criar_barbeiro(data: BarbeiroCreateRequest, current_user: Usuario = Depends(
         raise HTTPException(status_code=400, detail="Email já registrado")
 
     try:
+        # 1. Criar Usuario
         novo_usuario = Usuario(
             nome=data.nome,
             email=data.email,
+            telefone=data.telefone,
             senha_hash=generate_password_hash(data.senha),
             tipo=TipoUsuario.BARBEIRO
         )
         db.add(novo_usuario)
         db.flush()
 
+        # 2. Criar Barbeiro
         novo_barbeiro = Barbeiro(
             id_barbeiro=novo_usuario.id_usuario,
-            especialidade=data.especialidade,
+            especialidade=data.especialidade or "Geral",
             ativo=True
         )
         db.add(novo_barbeiro)
+        db.flush() # Para garantir que o ID do barbeiro esteja disponivel (é o mesmo do usuario)
+
+        # 3. Criar Serviços Fixos
+        servicos_fixos = [
+            {"nome": "Corte de Cabelo", "preco": 30.00, "duracao": 30},
+            {"nome": "Barba", "preco": 20.00, "duracao": 20},
+            {"nome": "Barba + Cabelo", "preco": 45.00, "duracao": 50}
+        ]
+        
+        for sv in servicos_fixos:
+            db.add(Servico(
+                nome=sv["nome"],
+                descricao="Serviço padrão",
+                preco=sv["preco"],
+                duracao_estimada=sv["duracao"],
+                id_barbeiro_criador=novo_barbeiro.id_barbeiro,
+                ativo=True
+            ))
+
+
+
+        # 5. Criar Disponibilidade (Próximos 60 dias)
+        hoje = date.today()
+        for i in range(60):
+            dia_atual = hoje + timedelta(days=i)
+            for h in range(9, 19):
+                hora_inicio = time(hour=h, minute=0)
+                hora_fim = time(hour=h+1, minute=0)
+                
+                db.add(DisponibilidadeBarbeiro(
+                    id_barbeiro=novo_barbeiro.id_barbeiro,
+                    data=dia_atual,
+                    hora_inicio=hora_inicio,
+                    hora_fim=hora_fim,
+                    tipo=TipoDisponibilidade.DISPONIVEL,
+                    recorrente=False # Gerando explicitamente
+                ))
+
         db.commit()
-        return {"mensagem": "Barbeiro criado com sucesso"}
+        return {"mensagem": "Barbeiro criado com sucesso com serviços e agenda padrão"}
     except SQLAlchemyError as e:
         db.rollback()
         raise HTTPException(status_code=500, detail=str(e))
