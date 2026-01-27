@@ -14,8 +14,6 @@ function Appointment() {
         const token = localStorage.getItem('accessToken');
         if (!token) {
             console.error("No access token found");
-            // If specific route is protected, maybe redirect
-            // navigate('/'); 
             return;
         }
 
@@ -27,10 +25,10 @@ function Appointment() {
             });
             if (response.ok) {
                 const data = await response.json();
-                // Frontend expects `image` property, add default if missing or map it
+                
                 const dataWithImage = data.map((item: any) => ({
                     ...item,
-                    image: exemplo // Using default image for now
+                    image: exemplo 
                 })).filter((item: any) => item.status !== 'cancelado' && item.status !== 'recusado');
                 setAppointments(dataWithImage);
             } else if (response.status === 401) {

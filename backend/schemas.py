@@ -62,3 +62,4 @@ class NotificacaoRequest(BaseModel):
 
 class UpdatePerfilRequest(BaseModel):
     nome: Optional[str] = None
+    telefone: Optional[str] = None

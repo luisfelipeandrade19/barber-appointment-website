@@ -54,6 +54,7 @@
 
 .appoiments {
     padding: 20px 0px;
+    width: 360px;
 }
 
 #appoiments-list {
@@ -87,6 +88,8 @@
 
 .delete-btn {
     position: absolute;
+    top: 5px;
+    right: 5px;
     top: 5px;
     right: 5px;
     background: transparent;

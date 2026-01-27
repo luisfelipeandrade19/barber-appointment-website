@@ -1,6 +1,5 @@
 .profile-container {
-    max-width: 430px;
-    width: 100%;
+    width: 430px;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -18,9 +17,8 @@
     padding: 20px;
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 25px;
     border-radius: 20px;
-    /* Rounded corners */
 }
 
 .avatar-container {
