@@ -47,12 +47,14 @@ O sistema foi projetado para rodar de forma limpa e isolada utilizando **Docker*
 
 ## 🛠️ Tecnologias e Dependências
 
-### Frontend (Em Desenvolvimento)
+### Frontend
 *   **Biblioteca**: React 19
 *   **Build Tool**: Vite
 *   **Linguagem**: TypeScript
 *   **Testes E2E**: Playwright
 *   **Roteamento**: React Router DOM 7
+*   **Estilização**: CSS Modules / Vanilla CSS
+*   **Autenticação Social**: Google & Facebook Login
 *   **Linting**: ESLint
 
 ### Backend
@@ -89,7 +91,7 @@ barber-appointment-website/
 │   ├── Dockerfile          # Definição da imagem Docker do backend
 │   ├── pyproject.toml      # Arquivo de configuração e dependências (Poetry)
 │   └── .env                # Variáveis de ambiente (não versionado por segurança)
-├── frontend/               # Código fonte do Frontend (Em desenvolvimento)
+├── frontend/               # Código fonte do Frontend (Aplicação React)
 ├── docker-compose.yml      # Orquestração dos serviços (App + Banco)
 ├── .gitignore              # Arquivos ignorados pelo Git
 └── README.md               # Documentação do projeto
@@ -138,6 +140,39 @@ O ambiente é totalmente controlado pelo `docker-compose.yml`, que define três 
     ```bash
     docker exec -it barber_db psql -U postgres -d barbersystem
     ```
+
+---
+
+## 💻 Desenvolvimento Local (Frontend)
+
+Caso queira executar o frontend localmente fora do Docker (para desenvolvimento ágil com HMR):
+
+1.  **Navegue até a pasta do frontend:**
+    ```bash
+    cd frontend
+    ```
+
+2.  **Instale as dependências:**
+    ```bash
+    npm install
+    ```
+
+3.  **Execute em modo de desenvolvimento:**
+    ```bash
+    npm run dev
+    ```
+    Acesse em [http://localhost:5173](http://localhost:5173).
+
+### Scripts Disponíveis
+
+No diretório `frontend`, você pode executar:
+
+*   `npm run dev`: Inicia o servidor de desenvolvimento.
+*   `npm run build`: Compila o projeto para produção.
+*   `npm run preview`: Visualiza o build de produção localmente.
+*   `npm run lint`: Executa a verificação de código com ESLint.
+*   `npm test`: Roda os testes E2E com Playwright.
+*   `npm run test:ui`: Roda os testes com interface visual.
 
 ---
 
