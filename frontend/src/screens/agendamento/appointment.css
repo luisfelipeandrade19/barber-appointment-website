@@ -1,29 +1,31 @@
 .appointment-container {
-    width: 430px; 
-    margin: 0 auto; 
-    
-    /* Mantém a altura total da tela */
-    min-height: 100vh; 
-    
-    /* Opcional: uma borda ou sombra ajuda a visualizar o limite no PC */
+    width: 430px;
+    margin: 0 auto;
+
+    min-height: 100vh;
+
     border-left: 1px solid #ddd;
     border-right: 1px solid #ddd;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
 
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* Garante que o conteúdo comece do topo */
-    align-items: center;         /* Centraliza os itens horizontalmente */
-    overflow-y: auto;            /* Ativa a rolagem vertical */
+    justify-content: flex-start;
+    align-items: center;
+    overflow-y: auto;
     height: 100vh;
 }
 
 .appointment-header {
     text-align: start;
+}
+
+.appointment-content-main {
+    width: 85%;
 }
 
 .appointment-page-btn {
@@ -47,7 +49,7 @@
     border-radius: 14px;
     border: 1px solid rgba(0, 1, 47, 0.4);
     position: relative;
-    /* Context for delete button */
+    width: 100%;
 }
 
 .appoiments {
@@ -68,11 +70,12 @@
 
 #img-list {
     border-radius: 24px;
-    padding: 10px;
+    padding: 15px;
+    width: 130px;
 }
 
 .appointment-info {
-    padding: 10px;
+    padding: 15px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -82,17 +85,15 @@
     font-weight: 700;
 }
 
-/* Delete Button Styles */
 .delete-btn {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 5px;
+    right: 5px;
     background: transparent;
     border: none;
     cursor: pointer;
     color: #ff4d4d;
-    /* Red color for X */
-    padding: 5px;
+    padding: 1px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -104,7 +105,6 @@
     color: red;
 }
 
-/* Modal Styles */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -120,14 +120,13 @@
 
 .modal-content {
     background-color: #2a2a2a;
-    /* Dark background matching theme potentially */
     color: white;
     padding: 25px;
     border-radius: 12px;
     text-align: center;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    max-width: 90%;
+    max-width: 100%;
     width: 350px;
 }
 
