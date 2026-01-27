@@ -58,6 +58,7 @@ def deletar_usuario(id_usuario: int, current_user: Usuario = Depends(get_current
 @router.put('/api/perfil')
 def atualizar_perfil(data: UpdatePerfilRequest, current_user: Usuario = Depends(get_current_user), db: Session = Depends(get_db)):
     if data.nome: current_user.nome = data.nome
+    if data.telefone: current_user.telefone = data.telefone
     db.commit()
     return {"mensagem": "Perfil atualizado"}
 

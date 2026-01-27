@@ -63,7 +63,7 @@ function ProfilePage() {
                 </div>
                 <div className="profile-info">
                     <h2>{user.nome}</h2>
-                    <a href="#" className="edit-link">Editar perfil &gt;</a>
+                    <a href="#" className="edit-link" onClick={() => navigate('/editar')}>Editar perfil &gt;</a>
                 </div>
             </header>
 

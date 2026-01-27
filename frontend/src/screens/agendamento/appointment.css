@@ -2,10 +2,8 @@
     width: 430px; 
     margin: 0 auto; 
     
-    /* Mantém a altura total da tela */
     min-height: 100vh; 
-    
-    /* Opcional: uma borda ou sombra ajuda a visualizar o limite no PC */
+
     border-left: 1px solid #ddd;
     border-right: 1px solid #ddd;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -16,9 +14,9 @@
 
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* Garante que o conteúdo comece do topo */
-    align-items: center;         /* Centraliza os itens horizontalmente */
-    overflow-y: auto;            /* Ativa a rolagem vertical */
+    justify-content: flex-start; 
+    align-items: center;         
+    overflow-y: auto;            
     height: 100vh;
 }
 
@@ -47,11 +45,11 @@
     border-radius: 14px;
     border: 1px solid rgba(0, 1, 47, 0.4);
     position: relative;
-    /* Context for delete button */
 }
 
 .appoiments {
     padding: 20px 0px;
+    width: 360px;
 }
 
 #appoiments-list {
@@ -82,16 +80,14 @@
     font-weight: 700;
 }
 
-/* Delete Button Styles */
 .delete-btn {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 5px;
+    right: 5px;
     background: transparent;
     border: none;
     cursor: pointer;
     color: #ff4d4d;
-    /* Red color for X */
     padding: 5px;
     display: flex;
     align-items: center;
@@ -104,7 +100,6 @@
     color: red;
 }
 
-/* Modal Styles */
 .modal-overlay {
     position: fixed;
     top: 0;
