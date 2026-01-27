@@ -31,11 +31,11 @@ O sistema foi projetado para rodar de forma limpa e isolada utilizando **Docker*
     ```bash
     docker compose ps
     ```
-    Você deverá ver dois containers rodando: `barber_backend` e `barber_db`.
+    Você deverá ver três containers rodando: `barber_backend`, `barber_db` e `barber_frontend`.
 
-4.  **Acesse a documentação da API:**
-    Com os containers rodando, acesse a documentação interativa (Swagger UI) em seu navegador:
-    *   [http://localhost:8000/docs](http://localhost:8000/docs)
+4.  **Acesse a aplicação:**
+    *   **Frontend**: [http://localhost:5173](http://localhost:5173)
+    *   **API Docs**: [http://localhost:8000/docs](http://localhost:8000/docs)
 
 5.  **Populando o Banco de Dados (Opcional):**
     Para criar dados iniciais (usuários e barbeiros), você pode executar o script de seed diretamente dentro do container:
@@ -99,7 +99,7 @@ barber-appointment-website/
 
 ## 🐳 Utilizando com Docker
 
-O ambiente é totalmente controlado pelo `docker-compose.yml`, que define dois serviços principais:
+O ambiente é totalmente controlado pelo `docker-compose.yml`, que define três serviços principais:
 
 ### 1. `db` (Banco de Dados)
 *   **Imagem**: `postgres:15`
@@ -111,6 +111,11 @@ O ambiente é totalmente controlado pelo `docker-compose.yml`, que define dois s
 *   **Porta Exposta**: `8000`
 *   **Dependência**: Aguarda o serviço `db` iniciar antes de subir.
 
+### 3. `frontend` (Aplicação Web)
+*   **Imagem**: Construída a partir do `frontend/Dockerfile` (Multi-stage build).
+*   **Porta Exposta**: `5173` (Mapeada da porta 80 do container)
+*   **Acesso**: [http://localhost:5173](http://localhost:5173)
+
 #### Comandos Úteis
 
 *   **Parar tudo:**
@@ -120,6 +125,10 @@ O ambiente é totalmente controlado pelo `docker-compose.yml`, que define dois s
 *   **Acessar logs do backend:**
     ```bash
     docker compose logs -f backend
+    ```
+*   **Acessar logs do frontend:**
+    ```bash
+    docker compose logs -f frontend
     ```
 *   **Entrar no shell do container backend:**
     ```bash
