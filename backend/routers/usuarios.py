@@ -63,4 +63,16 @@ def atualizar_perfil(data: UpdatePerfilRequest, current_user: Usuario = Depends(
 
 @router.get('/api/perfil')
 def obter_perfil(current_user: Usuario = Depends(get_current_user)):
-    return {"id": current_user.id_usuario, "nome": current_user.nome, "email": current_user.email, "tipo": current_user.tipo.value}
+    data = {
+        "id": current_user.id_usuario, 
+        "nome": current_user.nome, 
+        "email": current_user.email, 
+        "tipo": current_user.tipo.value,
+        "telefone": current_user.telefone,
+        "data_cadastro": current_user.data_cadastro.isoformat() if current_user.data_cadastro else None
+    }
+    
+    if current_user.tipo == TipoUsuario.CLIENTE and current_user.cliente:
+        data["preferencias"] = current_user.cliente.preferencias
+        
+    return data
