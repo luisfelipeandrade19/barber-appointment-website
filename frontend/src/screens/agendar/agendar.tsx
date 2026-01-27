@@ -1,59 +1,122 @@
+import { useState } from "react";
+import BarberFormGroup from "../../lib/components/barberFormGroup/barberFormGroup";
 import "./agendar.css";
+import ServicesFormGroup from "../../lib/components/servicesFormGroup/servicesFormGroup";
+import { useNavigate } from "react-router-dom";
+import TimeFormGroup from "../../lib/components/timeFormGroup/timeFormGroup";
 
-function Agendar(){
+function Agendar() {
+  const [selectedBarberId, setSelectedBarberId] = useState("");
+  const [selectedServiceId, setSelectedServiceId] = useState("");
+  const [selectedData, setSelectedData] = useState("")
 
-    return(
-        <>
+  const [selectedTime, setSelectedTime] = useState("")
+
+  const navigate = useNavigate()
+
+  const [loading, setLoading] = useState(false)
+
+  const usuarioLogado = localStorage.getItem('usuario');
+  const ID_CLIENTE = usuarioLogado ? JSON.parse(usuarioLogado).id : null;
+
+  const handleAgendar = async () => {
+    if (!ID_CLIENTE) {
+      alert("Você precisa estar logado para agendar.");
+      navigate('/');
+      return;
+    }
+
+    if (!selectedBarberId || !selectedServiceId || !selectedData || !selectedTime) {
+      alert("Por favor, preencha todos os campos.");
+      return;
+    }
+
+    setLoading(true)
+
+    try {
+      const dateTimeString = `${selectedData}T${selectedTime.split('T')[1]}`;
+      const response = await fetch('/api/agendamentos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id_cliente: ID_CLIENTE,
+          id_barbeiro: parseInt(selectedBarberId),
+          servicos: [parseInt(selectedServiceId)],
+          data_hora: dateTimeString
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.message || "Erro ao fazer agendamento!")
+      }
+
+      navigate('/agendamentos')
+
+    } catch (error) {
+      console.error("Erro na requisicao", error)
+      alert("Erro ao realizar agendamento: ")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleBarberSelect = (id: string) => {
+    console.log("Barbeiro selecionado no pai:", id);
+    setSelectedBarberId(id);
+    setSelectedServiceId("");
+  };
+  const handleServiceSelect = (id: string) => {
+    console.log("Serviço selecionado:", id);
+    setSelectedServiceId(id);
+  };
+  const handleDataSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    console.log("Data selecionada:", value)
+    setSelectedData(value)
+  }
+  const handleTimeSelect = (time: string) => {
+    console.log("Horário selecionado:", time);
+    setSelectedTime(time);
+  }
+
+
+  return (
+    <>
       <div className="agendar-container">
         <header className="agendar-header">
           <h1>Agendamento de serviço</h1>
         </header>
 
         <div className=" form-group">
-          <div className="barber-form-group" id="forms">
-            <label>Barbeiro:</label>
-            <select className="input-field">
-                <option value="" disabled selected>Selecione um barbeiro</option>
-                <option value="barbeiro1">Matheus Bombeiro</option>
-            </select>
+          {/* Removed onChange prop as it is not defined in BarberFormGroupProps */}
+          <BarberFormGroup onSelect={handleBarberSelect} />
+
+          <ServicesFormGroup
+            barbeiro_id={selectedBarberId}
+            onSelect={handleServiceSelect}
+          />
+
+          <div className="date-form-group" id="forms">
+            <label>Data:</label>
+            <input type="date" className="input-field" id="data-agendamento" onChange={handleDataSelect} />
           </div>
 
-          <div className="services-form-group" id="forms">
-              <label>Serviços:</label>
-              <select className="input-field">
-                  <option value="" disabled selected>Escolha o serviço</option>
-                  <option value="corte">Corte Social</option>
-                  <option value="barba">Barba Completa</option>
-                  <option value="combo">Corte + Barba</option>
-              </select>
-          </div>
+          <TimeFormGroup date={selectedData} id_barbeiro={selectedBarberId} onSelect={handleTimeSelect} />
 
-            <div className="date-form-group" id="forms">
-                <label>Data:</label>
-                <input type="date" className="input-field" id="data-agendamento"/>
-            </div>
-
-          <div className="time-form-group" id="forms">
-            <label>Horários disponíveis:</label>
-            <select className="input-field">
-              <option value="" disabled selected>Selecione um horário</option>
-              <option value="09:00">09:00</option>
-              <option value="09:30">09:30</option>
-              <option value="10:00">10:00</option>
-              <option value="10:30">10:30</option>
-              <option value="11:00">11:00</option>
-              <option value="11:30">11:30</option>
-              <option value="12:00">12:00</option>
-            </select>
-          </div>
           <div className="button-app">
-              <button className="appointment-page-btn" id="btn-appoint">AGENDAR AGORA</button>
+            <button className="appointment-page-btn" id="btn-appoint" onClick={handleAgendar} disabled={loading}>
+              {loading ? "AGENDANDO..." : "AGENDAR AGORA"}
+            </button>
           </div>
         </div>
 
       </div>
-      </>
-    )
+    </>
+  )
 }
 
 export default Agendar;

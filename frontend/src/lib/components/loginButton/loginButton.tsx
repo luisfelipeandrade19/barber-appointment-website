@@ -1,22 +1,19 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
-const LoginButton = () => {
-    const navigate = useNavigate();
+interface LoginButtonProps {
+    onClick: () => Promise<void>;
+}
+
+const LoginButton = ({ onClick }: LoginButtonProps) => {
     const [loading, setLoading] = useState(false);
 
-    const handleLogin = async () => {
+    const handleButtonClick = async () => {
         setLoading(true);
 
         try {
-            await new Promise(resolve => setTimeout(resolve, 1000));
-
-            console.log("Login realizado com sucesso!");
-            navigate('/home');
-
+            await onClick();
         } catch (error) {
-            alert("Falha no login. Verifique suas credenciais.");
-            console.error(error);
+            console.error("Erro capturado pelo botao", error);
         } finally {
             setLoading(false);
         }
@@ -25,7 +22,7 @@ const LoginButton = () => {
     return (
         <button
             id="loginButton"
-            onClick={handleLogin}
+            onClick={handleButtonClick}
             disabled={loading}
             style={{ cursor: loading ? 'wait' : 'pointer', color: 'white' }}
         >

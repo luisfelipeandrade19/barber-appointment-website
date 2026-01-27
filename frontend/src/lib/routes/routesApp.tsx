@@ -6,7 +6,7 @@ import NavBar from "../components/navBar/navBar";
 import Agendar from "../../screens/agendar/agendar";
 import ProfilePage from "../../screens/profile/profilePage";
 
- import { GoogleOAuthProvider } from '@react-oauth/google';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import Appointment from "../../screens/agendamento/appointment";
 import HistoryPage from "../../screens/historico/historyPage";
 
@@ -20,13 +20,13 @@ function Layout() {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/agendar" element={<Agendar/>} />
-        <Route path="/home" element={<Home/>}/>
-        <Route path="/agendamentos" element={<Appointment/>}/>
-        <Route path="/historico" element={<HistoryPage/>}/>
-        <Route path="/perfil" element={<ProfilePage/>}/>
+        <Route path="/agendar" element={<Agendar />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/agendamentos" element={<Appointment />} />
+        <Route path="/historico" element={<HistoryPage />} />
+        <Route path="/perfil" element={<ProfilePage />} />
       </Routes>
-      {showNavBar && <NavBar/>}
+      {showNavBar && <NavBar />}
     </>
   );
 }
@@ -41,7 +41,7 @@ function RoutesApp() {
         <Layout />
       </BrowserRouter>
     </GoogleOAuthProvider>
-        
+
   );
 }
 

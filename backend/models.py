@@ -10,7 +10,14 @@ from dotenv import load_dotenv
 load_dotenv() # Carrega variáveis do arquivo .env
 
 Base = declarative_base()
-engine = create_engine(os.getenv('DATABASE_URL', 'postgresql://postgres:1605@localhost:5432/barbersystem'))
+
+# Configuração de Produção para o Engine
+engine = create_engine(
+    os.getenv('DATABASE_URL', 'postgresql://postgres:1605@localhost:5432/barbersystem'),
+    pool_pre_ping=True,  # Verifica se a conexão está viva antes de usar (evita erros de "server closed the connection")
+    pool_size=10,        # Mantém 10 conexões abertas
+    max_overflow=20      # Permite criar mais 20 se as 10 estiverem ocupadas
+)
 _Session = sessionmaker(bind=engine)
 
 # Enums
@@ -97,6 +104,7 @@ class Barbeiro(Base):
     disponibilidades = relationship("DisponibilidadeBarbeiro", back_populates="barbeiro")
     historicos = relationship("HistoricoServico", back_populates="barbeiro")
     registros_financeiros = relationship("RegistroFinanceiro", back_populates="barbeiro")
+    especialidades = relationship("Especialidade", back_populates="barbeiro")
 
 class Servico(Base):
     __tablename__ = "servico"
@@ -168,17 +176,48 @@ class Notificacao(Base):
     __tablename__ = "notificacao"
     
     id_notificacao = Column(Integer, primary_key=True)
-    id_agendamento = Column(Integer, ForeignKey('agendamento.id_agendamento'), nullable=False)
-    tipo = Column(Enum(TipoNotificacao), nullable=False)
-    canal = Column(Enum(CanalNotificacao), nullable=False)
-    destinatario = Column(String(255), nullable=False)
-    mensagem = Column(Text, nullable=False)
+    id_agendamento = Column(Integer, ForeignKey('agendamento.id_agendamento'), nullable=True)
+    id_cliente = Column(Integer, ForeignKey('cliente.id_cliente'), nullable=True)
+    tipo = Column(Enum(TipoNotificacao), nullable=True)
+    canal = Column(Enum(CanalNotificacao), nullable=True)
+    destinatario = Column(String(255), nullable=True)
+    mensagem = Column(Text, nullable=True)
     data_envio = Column(DateTime, nullable=False)
     status_envio = Column(Enum(StatusEnvio), default=StatusEnvio.PENDENTE)
     tentativas = Column(Integer, default=0)
+    lida = Column(Boolean, default=False)
     
     # Relacionamentos
     agendamento = relationship("Agendamento", back_populates="notificacoes")
+    cliente = relationship("Cliente")
+
+class Especialidade(Base):
+    __tablename__ = "especialidade"
+    
+    id_especialidade = Column(Integer, primary_key=True)
+    id_barbeiro = Column(Integer, ForeignKey('barbeiro.id_barbeiro'), nullable=False)
+    nome = Column(String(100), nullable=False)
+    descricao = Column(Text, nullable=True)
+    
+    barbeiro = relationship("Barbeiro", back_populates="especialidades")
+
+class Preferencia(Base):
+    __tablename__ = "preferencia"
+    
+    id_preferencia = Column(Integer, primary_key=True)
+    id_cliente = Column(Integer, ForeignKey('cliente.id_cliente'), nullable=False)
+    descricao = Column(Text, nullable=False)
+    
+    cliente = relationship("Cliente")
+
+class Disponibilidade(Base):
+    __tablename__ = "disponibilidade"
+    
+    id_disponibilidade = Column(Integer, primary_key=True)
+    id_barbeiro = Column(Integer, ForeignKey('barbeiro.id_barbeiro'), nullable=False)
+    data_hora_inicio = Column(DateTime, nullable=False)
+    data_hora_fim = Column(DateTime, nullable=False)
+    disponivel = Column(Boolean, default=True)
 
 class HistoricoServico(Base):
     __tablename__ = "historico_servico"
@@ -211,37 +250,3 @@ class RegistroFinanceiro(Base):
     # Relacionamentos
     barbeiro = relationship("Barbeiro", back_populates="registros_financeiros")
     agendamento = relationship("Agendamento", back_populates="registros_financeiros")
-
-
-#Base.metadata.create_all(engine)
-
-def criar_tabelas():
-    print("Conectando ao banco...")
-    print(f"URL: {engine.url}")
-    
-    try:
-        # Testa a conexão primeiro
-        with engine.connect() as conn:
-            print("Conexão bem-sucedida!")
-        
-        # Cria as tabelas
-        Base.metadata.create_all(engine)
-        print("Tabelas criadas com sucesso!")
-        
-        # Lista tabelas criadas
-        with engine.connect() as conn:
-            from sqlalchemy import text
-            result = conn.execute(text("""
-                SELECT table_name 
-                FROM information_schema.tables 
-                WHERE table_schema = 'public'
-            """))
-            tables = [row[0] for row in result]
-            print(f"Tabelas: {', '.join(tables)}")
-            
-    except Exception as e:
-        print(f"ERRO: {e}")
-        raise
-    
-if __name__ == "__main__":
-    criar_tabelas()
